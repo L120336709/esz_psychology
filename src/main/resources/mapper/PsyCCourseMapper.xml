@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.PsyCCourseMapper">
+    
+    <resultMap type="com.sundata.edu.domain.PsyCCourse" id="PsyCCourseResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="ctStartTime"    column="ctStartTime"    />
+        <result property="ctEndTime"    column="ctEndTime"    />
+        <result property="ctImgUrl"    column="ctImgUrl"    />
+        <result property="adolargeFaceUrl"    column="adolargeFaceUrl"    />
+        <result property="adolectorDesc"    column="adolectorDesc"    />
+        <result property="adorealName"    column="adorealName"    />
+        <result property="ctId"    column="ctId"    />
+        <result property="adoname"    column="adoname"    />
+        <result property="adotype"    column="adotype"    />
+        <result property="adoopenUid"    column="adoopenUid"    />
+        <result property="createTime"    column="createTime"    />
+        <result property="updateTime"    column="updateTime"    />
+        <result property="allClasshour"    column="all_classhour"    />
+        <result property="jsonContent"    column="jsonContent"    />
+        <result property="description"    column="description"    />
+    </resultMap>
+
+    <sql id="selectPsyCCourseVo">
+        select id, name, ctStartTime, ctEndTime, ctImgUrl, adolargeFaceUrl, adolectorDesc, adorealName,
+         ctId, adoname, adotype, adoopenUid, createTime, updateTime,all_classhour,jsonContent,description from psy_c_course
+    </sql>
+
+    <select id="selectPsyCCourseList" parameterType="PsyCCourse" resultMap="PsyCCourseResult">
+        <include refid="selectPsyCCourseVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="ctStartTime != null "> and ctStartTime = #{ctStartTime}</if>
+            <if test="ctEndTime != null "> and ctEndTime = #{ctEndTime}</if>
+            <if test="ctImgUrl != null  and ctImgUrl != ''"> and ctImgUrl = #{ctImgUrl}</if>
+            <if test="adolargeFaceUrl != null  and adolargeFaceUrl != ''"> and adolargeFaceUrl = #{adolargeFaceUrl}</if>
+            <if test="adolectorDesc != null  and adolectorDesc != ''"> and adolectorDesc = #{adolectorDesc}</if>
+            <if test="adorealName != null  and adorealName != ''"> and adorealName like concat('%', #{adorealName}, '%')</if>
+            <if test="ctId != null "> and ctId = #{ctId}</if>
+            <if test="adoname != null  and adoname != ''"> and adoname like concat('%', #{adoname}, '%')</if>
+            <if test="adotype != null  and adotype != ''"> and adotype = #{adotype}</if>
+            <if test="adoopenUid != null "> and adoopenUid = #{adoopenUid}</if>
+            <if test="createTime != null "> and createTime = #{createTime}</if>
+            <if test="updateTime != null "> and updateTime = #{updateTime}</if>
+            <if test="allClasshour != null  and allClasshour != ''"> and all_classhour = #{allClasshour}</if>
+            <if test="jsonContent != null  and jsonContent != ''"> and jsonContent = #{jsonContent}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+
+        </where>
+    </select>
+    
+    <select id="selectPsyCCourseById" parameterType="Long" resultMap="PsyCCourseResult">
+        <include refid="selectPsyCCourseVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyCCourse" parameterType="PsyCCourse">
+        insert into psy_c_course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="ctStartTime != null">ctStartTime,</if>
+            <if test="ctEndTime != null">ctEndTime,</if>
+            <if test="ctImgUrl != null">ctImgUrl,</if>
+            <if test="adolargeFaceUrl != null">adolargeFaceUrl,</if>
+            <if test="adolectorDesc != null">adolectorDesc,</if>
+            <if test="adorealName != null">adorealName,</if>
+            <if test="ctId != null">ctId,</if>
+            <if test="adoname != null">adoname,</if>
+            <if test="adotype != null">adotype,</if>
+            <if test="adoopenUid != null">adoopenUid,</if>
+            <if test="createTime != null">createTime,</if>
+            <if test="updateTime != null">updateTime,</if>
+            <if test="allClasshour != null">all_classhour,</if>
+            <if test="jsonContent != null">jsonContent,</if>
+            <if test="description != null">description,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="ctStartTime != null">#{ctStartTime},</if>
+            <if test="ctEndTime != null">#{ctEndTime},</if>
+            <if test="ctImgUrl != null">#{ctImgUrl},</if>
+            <if test="adolargeFaceUrl != null">#{adolargeFaceUrl},</if>
+            <if test="adolectorDesc != null">#{adolectorDesc},</if>
+            <if test="adorealName != null">#{adorealName},</if>
+            <if test="ctId != null">#{ctId},</if>
+            <if test="adoname != null">#{adoname},</if>
+            <if test="adotype != null">#{adotype},</if>
+            <if test="adoopenUid != null">#{adoopenUid},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="allClasshour != null">#{allClasshour},</if>
+            <if test="jsonContent != null">#{jsonContent},</if>
+            <if test="description != null">#{description},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyCCourse" parameterType="PsyCCourse">
+        update psy_c_course
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="ctStartTime != null">ctStartTime = #{ctStartTime},</if>
+            <if test="ctEndTime != null">ctEndTime = #{ctEndTime},</if>
+            <if test="ctImgUrl != null">ctImgUrl = #{ctImgUrl},</if>
+            <if test="adolargeFaceUrl != null">adolargeFaceUrl = #{adolargeFaceUrl},</if>
+            <if test="adolectorDesc != null">adolectorDesc = #{adolectorDesc},</if>
+            <if test="adorealName != null">adorealName = #{adorealName},</if>
+            <if test="ctId != null">ctId = #{ctId},</if>
+            <if test="adoname != null">adoname = #{adoname},</if>
+            <if test="adotype != null">adotype = #{adotype},</if>
+            <if test="adoopenUid != null">adoopenUid = #{adoopenUid},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="allClasshour != null">all_classhour = #{allClasshour},</if>
+            <if test="jsonContent != null">jsonContent = #{jsonContent},</if>
+            <if test="description != null">description = #{description},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyCCourseById" parameterType="Long">
+        delete from psy_c_course where id = #{id}
+    </delete>
+
+    <delete id="deletePsyCCourseByIds" parameterType="String">
+        delete from psy_c_course where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

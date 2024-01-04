@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('权限管理')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form1" autocomplete="off">
+        <input type="hidden" id="id" name="id" th:value="${userId}"/>
+        <input type="hidden" id="roleChecked" name="roleChecked" th:value="${checkRoles}"/>
+        <label class="col-sm-3 control-label">权限选择：</label>
+        <div class="col-sm-9">
+            <label class="check-box" th:each="data : ${roleList}">
+                <input type="checkbox" th:value="${data.roleId}" name="role" th:data-code="${data.roleCode}"
+                       style="position: absolute; opacity: 0;">
+                [[${data.roleName}]]
+            </label>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<script type="text/javascript">
+    $(function () {
+        setCheckBoxStatus();
+    });
+
+    function submitHandler() {
+        saveEdit();
+    }
+
+    function setCheckBoxStatus() {
+        var roleids = $("#roleChecked").val().split(',');
+        $('input:checkbox[name="role"]').each(function (index, value) {
+            if ($.inArray($(this).val(), roleids) >= 0) {
+                $.common.checkbox(this, true);
+            }
+        });
+    }
+
+    function saveEdit() {
+        var checkRoleIds = [];
+        var role = document.getElementsByName('role');
+        for (var i = 0; i < role.length; i++) {
+            if (role[i].checked) {
+                checkRoleIds.push(role[i].value);
+            }
+        }
+        $.ajax({
+            type: "post",
+            url: ctx + "sysAuthority/editUserRoles",
+            data: {
+                "id": $("#id").val(),
+                "roleIds": checkRoleIds.toString()
+            },
+            success: function (data) {
+                console.log(data)
+                $.operate.successCallback(data);
+            },
+            error: function (request) {
+                $.modal.alertError("系统错误");
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

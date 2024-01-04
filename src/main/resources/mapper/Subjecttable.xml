@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.SubjecttableDao">
+    
+    <resultMap type="com.sundata.edu.domain.Subjecttable" id="BaseResultMap">
+        <result property="subjectid" column="subjectid" />
+        <result property="subjectname" column="subjectname" />
+        <result property="phasestudy" column="phasestudy" />
+        <result property="phasestudyid" column="phasestudyid" />
+    </resultMap>
+    
+</mapper>

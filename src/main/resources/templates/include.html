@@ -1,0 +1,137 @@
+<!-- 通用CSS -->
+<head th:fragment=header(title)>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title th:text="${title}"></title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
+    <!-- bootstrap-table 表格插件样式 -->
+    <link th:href="@{/libs/bootstrap-table/bootstrap-table.css}" rel="stylesheet"/>
+    <link th:href="@{/css/animate.css}" rel="stylesheet"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/css/global.css}" rel="stylesheet"/>
+</head>
+
+<!-- 通用JS -->
+<div th:fragment="footer">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/jquery.form.js}"></script>
+    <script th:src="@{/js/jquery.ext.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <!-- bootstrap-table 表格插件 -->
+    <script th:src="@{/libs/bootstrap-table/bootstrap-table.js}"></script>
+    <script th:src="@{/libs/bootstrap-table/locale/bootstrap-table-zh-CN.min.js}"></script>
+    <script th:src="@{/libs/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js}"></script>
+    <script th:src="@{/libs/bootstrap-table/extensions/toolbar/bootstrap-table-toolbar.min.js}"></script>
+    <script th:src="@{/libs/bootstrap-table/extensions/columns/bootstrap-table-fixed-columns.js}"></script>
+    <!-- jquery-validate 表单验证插件 -->
+    <script th:src="@{/libs/validate/jquery.validate.min.js}"></script>
+    <script th:src="@{/libs/validate/messages_zh.min.js}"></script>
+    <script th:src="@{/libs/validate/jquery.validate.extend.js}"></script>
+    <!-- jquery-validate 表单树插件 -->
+    <script th:src="@{/libs/bootstrap-treetable/bootstrap-treetable.js}"></script>
+    <!-- jquery-export 表格导出插件 -->
+    <script th:src="@{/libs/bootstrap-table/extensions/export/bootstrap-table-export.js}"></script>
+    <script th:src="@{/libs/bootstrap-table/extensions/export/tableExport.js}"></script>
+    <!-- 遮罩层 -->
+    <script th:src="@{/libs/blockUI/jquery.blockUI.js}"></script>
+    <script th:src="@{/libs/iCheck/icheck.min.js}"></script>
+    <script th:src="@{/libs/layer/layer.min.js}"></script>
+    <script th:src="@{/libs/layui/layui.js}"></script>
+    <script th:src="@{/js/common.js?v=3.3.0}"></script>
+    <script th:src="@{/js/global.js?v=3.3.0}"></script>
+    <script th:inline="javascript"> var ctx = [[@{/}]]; </script>
+</div>
+
+<!-- ztree树插件 -->
+<div th:fragment="ztree-css">
+    <link th:href="@{/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="ztree-js">
+    <script th:src="@{/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+</div>
+
+<!-- select下拉框插件 -->
+<div th:fragment="select2-css">
+    <link th:href="@{/libs/select/css/select2.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="select2-js">
+    <script th:src="@{/libs/select/js/select2.full.js}"></script>
+    <script th:src="@{/libs/select/js/i18n/zh-CN.js}"></script>
+</div>
+
+<!-- datetimepicker日期和时间插件 -->
+<div th:fragment="datetimepicker-css">
+    <link th:href="@{/libs/datapicker/bootstrap-datetimepicker.min.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="datetimepicker-js">
+    <script th:src="@{/libs//datapicker/bootstrap-datetimepicker.min.js}"></script>
+</div>
+
+<!-- ui布局插件 -->
+<div th:fragment="layout-latest-css">
+    <link th:href="@{/libs/jquery-layout/jquery.layout-latest.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="layout-latest-js">
+    <script th:src="@{/libs/jquery-layout/jquery.layout-latest.js}"></script>
+</div>
+
+<!-- summernote富文本编辑器插件 -->
+<div th:fragment="summernote-css">
+    <link th:href="@{/libs/summernote/summernote.css}" rel="stylesheet"/>
+    <link th:href="@{/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="summernote-js">
+    <script th:src="@{/libs/summernote/summernote.min.js}"></script>
+    <script th:src="@{/libs/summernote/summernote-zh-CN.js}"></script>
+</div>
+
+<!-- cropbox图像裁剪插件 -->
+<div th:fragment="cropbox-css">
+    <link th:href="@{/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="cropbox-js">
+    <script th:src="@{/libs/cropbox/cropbox.js}"></script>
+</div>
+
+<!-- jsonview格式化和语法高亮JSON格式数据查看插件 -->
+<div th:fragment="jsonview-css">
+    <link th:href="@{/libs/jsonview/jquery.jsonview.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="jsonview-js">
+    <script th:src="@{/libs/jsonview/jquery.jsonview.js}"></script>
+</div>
+
+<th:block th:fragment="dossier-tabs(userId,tag)">
+    <ul class="nav nav-tabs">
+        <li th:class="${tag eq '基本信息'}?'active':''"><a th:href="@{/dossier/edit/}+${userId}">基本信息</a>
+        </li>
+        <li th:class="${tag eq '学历信息'}?'active':''"><a th:href="@{/education/}+${userId}">学历信息</a>
+        </li>
+        <li th:class="${tag eq '专业技术职务'}?'active':''"><a th:href="@{/technicalPosition/}+${userId}">专业技术职务</a>
+        </li>
+        <li th:class="${tag eq '行政职务'}?'active':''"><a th:href="@{/administrativePosition/}+${userId}">行政职务</a>
+        </li>
+        <li th:class="${tag eq '变动情况'}?'active':''"><a th:href="@{/change/}+${userId}">变动情况</a>
+        </li>
+        <li th:class="${tag eq '工作简历'}?'active':''"><a th:href="@{/job/}+${userId}">工作简历</a>
+        </li>
+        <li th:class="${tag eq '政治面貌'}?'active':''"><a th:href="@{/polity/}+${userId}">政治面貌</a>
+        </li>
+        <li th:class="${tag eq '组织考察'}?'active':''"><a th:href="@{/examine/}+${userId}">组织考察</a>
+        </li>
+        <li th:class="${tag eq '奖励信息'}?'active':''"><a th:href="@{/reward/}+${userId}">奖励信息</a>
+        </li>
+        <li th:class="${tag eq '惩罚信息'}?'active':''"><a th:href="@{/punish/}+${userId}">惩罚信息</a>
+        </li>
+        <li th:class="${tag eq '教育培训'}?'active':''"><a th:href="@{/refresher/}+${userId}">教育培训</a>
+        </li>
+        <li th:class="${tag eq '家庭成员'}?'active':''"><a th:href="@{/family/}+${userId}">家庭成员</a>
+        </li>
+        <li th:class="${tag eq '回避人员'}?'active':''"><a th:href="@{/avoid/}+${userId}">回避人员</a>
+        </li>
+    </ul>
+</th:block>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('列表')" />
+	<style>
+		#view{
+			border: 1px solid red;
+			background-image: url('/img/zhongdeng.png');
+			background-size: 100%;
+			width: 100px;
+			height: 280px;
+		}
+	</style>
+</head>
+<body>
+<!--<div class="modal-body" style="width: 400px" id="view">-->
+<!--	<table>-->
+<!--		<tr>清江外国语学校考点监考员安排表（A区考务一组）</tr>-->
+<!--		<tr>-->
+<!--			<td>-->
+<!--				&lt;!&ndash;<div style="width: 50%;" id="showBaseResponse">&ndash;&gt;-->
+<!--				<table width="50%"   border=1   style="display:inline" class="table-bordered" id="ESCompare" >-->
+
+<!--				</table>-->
+<!--				&lt;!&ndash;</div>&ndash;&gt;-->
+<!--			</td>-->
+<!--			<td>-->
+<!--				&lt;!&ndash;<div style="width: 50%;" id="showDiffResponse">&ndash;&gt;-->
+<!--				<table width="50%"   border=1   style="display:inline" class="table-bordered" id="TestCompare">-->
+<!--					<tbody id="StuMessage2" ></tbody>-->
+<!--				</table>-->
+<!--				&lt;!&ndash; </div>&ndash;&gt;-->
+<!--			</td>-->
+<!--		</tr>-->
+
+
+<!--	</table>-->
+<!--</div>-->
+
+<div >
+	<input type="button" value="截图" onclick="takePhoto()">
+</div>
+<div id="images"></div>
+
+
+<div id="content">
+	<!--左边头像-->
+	<img class="list_img" style="width: 100px;height: 100px" src="/img/zhongdeng.png" />
+	<!--左边消息-->
+	<span class="left_name">He</span>
+</div>
+
+<!--底部-->
+<div class="sumits_view">
+	<!--左边button点击-->
+	<button id="btnSave">点击转换成图片</button>
+	<!--右边button点击-->
+	<button id="Download">点击下载</button>
+</div>
+</body>
+<script src="/js/mmlib.min.js"></script>
+<script src="/js/tagsinput.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/h5/canvas2image.js"></script>
+<script src="/js/h5/html2canvas.js"></script>
+
+<script type="text/javascript">
+	function takePhoto() {
+		html2canvas(document.getElementById('view'), {
+			onrendered: function(canvas) {
+				canvas.setAttribute('id', 'thecanvas');
+				var dataUrl = canvas.toDataURL("image/png");
+				alert(canvas.toDataURL());
+				console.log(canvas.toDataURL());//这是截图的base64
+				document.body.appendChild(canvas);//这是有截图的画布
+			},
+		});
+	}
+	var btnSave = document.getElementById("btnSave");
+	// 获取内容id
+	var content = document.getElementById("content");
+	// 进行canvas生成
+	btnSave.onclick = function() {
+		html2canvas(content, {
+			onrendered: function(canvas) {
+				//添加属性
+				canvas.setAttribute('id', 'thecanvas');
+				//读取属性值
+				// var value= canvas.getAttribute('id');
+				document.getElementById('images').appendChild(canvas);
+			}
+		});
+	}
+
+	var Download = document.getElementById("Download");
+	Download.onclick = function () {
+		var oCanvas = document.getElementById("thecanvas");
+		var myBlob = dataURLtoBlob(canvas.toDataURL('img/png', 0.92))
+
+		/*自动保存为png*/
+		// 获取图片资源
+		var img_data1 = Canvas2Image.saveAsImage(oCanvas, true).getAttribute('src');
+
+
+
+		saveFile(img_data1, 'abc');
+
+		/*下面的为原生的保存，不带格式名*/
+		// 这将会提示用户保存PNG图片
+		// Canvas2Image.saveAsPNG(oCanvas);
+	}
+	// 保存文件函数
+	var saveFile = function(data, filename) {
+		var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+		save_link.href = data;
+		save_link.download = filename;
+
+		var event = document.createEvent('MouseEvents');
+		event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+		save_link.dispatchEvent(event);
+	};
+</script>
+ <script >
+	 window.onload = function () {
+		 $.ajax({
+			 url:'/invigilator/randomSorting',
+			 dataType:'json',
+			 type:'post',
+			 success:function(data){
+				 if (data.code==200) {
+					 var ss=data.rows[0];
+
+					 var con ='<tr class="row">' +
+							 '<td class="option">序号</td>' +
+							 '<td class="option">监考员甲</td>' +
+							 '<td class="option">监考员乙</td>' +
+							 '</tr>';
+					 for(var i=0;i<ss.length;i++){
+						 con +='<tr class="row">' +
+								 '<td class="option">'+(i+1)+'</td>' +
+								 '<td class="option">'+ss[i]+'</td>' +
+								 '<td class="option">'+ss[i]+'</td>' +
+								 '</tr>';
+					 }
+					 $("#ESCompare").html(con);
+
+					 var con2 ='<tr class="row">' +
+							 '<td class="option">序号</td>' +
+							 '<td class="option">监考员甲</td>' +
+							 '<td class="option">监考员乙</td>' +
+							 '</tr>';
+					 for(var i=0;i<ss.length;i++){
+						 con2 +='<tr class="row">' +
+								 '<td class="option">'+(i+1)+'</td>' +
+								 '<td class="option">'+ss[i]+'</td>' +
+								 '<td class="option">'+ss[i]+'</td>' +
+								 '</tr>';
+					 }
+					 $("#StuMessage2").html(con2);
+
+				 } else {
+					 alert("请检查准考证号或姓名输入是否正确!");
+					 return false;
+				 }
+			 },
+		 });
+	 }
+
+</script>
+
+</body>
+
+</html>

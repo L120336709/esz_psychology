@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.PsyCLessonsMapper">
+    
+    <resultMap type="PsyCLessons" id="PsyCLessonsResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="position"    column="position"    />
+        <result property="unitsid"    column="unitsid"    />
+        <result property="gmtModified"    column="gmtModified"    />
+        <result property="releaseTime"    column="releaseTime"    />
+        <result property="createTime"    column="createTime"    />
+        <result property="updateTime"    column="updateTime"    />
+        <result property="chapersId"    column="chapersId"   />
+    </resultMap>
+
+    <sql id="selectPsyCLessonsVo">
+        select id, name, position, unitsid, gmtModified, releaseTime, createTime, updateTime,chapersId from psy_c_lessons
+    </sql>
+
+    <select id="selectPsyCLessonsList" parameterType="PsyCLessons" resultMap="PsyCLessonsResult">
+        <include refid="selectPsyCLessonsVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="position != null "> and position = #{position}</if>
+            <if test="unitsid != null "> and unitsid = #{unitsid}</if>
+            <if test="gmtModified != null "> and gmtModified = #{gmtModified}</if>
+            <if test="releaseTime != null "> and releaseTime = #{releaseTime}</if>
+            <if test="createTime != null "> and createTime = #{createTime}</if>
+            <if test="updateTime != null "> and updateTime = #{updateTime}</if>
+            <if test="chapersId != null "> and chapersId = #{chapersId}</if>
+
+        </where>
+    </select>
+    
+    <select id="selectPsyCLessonsById" parameterType="Long" resultMap="PsyCLessonsResult">
+        <include refid="selectPsyCLessonsVo"/>
+        where id = #{id}
+    </select>
+
+    <!--批量查找数据 -->
+    <select id="selectPsyCLessonsListByCheaperIds" parameterType="java.util.ArrayList" resultMap="PsyCLessonsResult">
+        <include refid="selectPsyCLessonsVo"/>
+        <where>
+            chapersId in (
+            <foreach collection="list" item="chapersId" index="index" separator=",">
+                #{chapersId}
+            </foreach>
+            )
+        </where>
+    </select>
+
+    <!--批量查找数据 -->
+    <select id="selectPsyCLessonsListByIds" parameterType="java.util.ArrayList" resultMap="PsyCLessonsResult">
+        <include refid="selectPsyCLessonsVo"/>
+        <where>
+            id in (
+            <foreach collection="list" item="id" index="index" separator=",">
+                #{id}
+            </foreach>
+            )
+        </where>
+    </select>
+
+    <!--批量插入数据 -->
+    <insert id="insertPsyCLessonsList">
+        insert into psy_c_lessons (id, name, position, unitsid, gmtModified, releaseTime, createTime, updateTime,chapersId)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.name},#{item.position},#{item.unitsid},
+            #{item.gmtModified},#{item.releaseTime},#{item.createTime},#{item.updateTime},#{item.chapersId})
+        </foreach>
+    </insert>
+
+    <!--批量更新数据 -->
+    <update id="updatePsyCLessonsList" parameterType="java.util.List">
+        update psy_c_lessons set
+        name =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.name,jdbcType=VARCHAR}
+        </foreach>
+        ,position =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.position,jdbcType=VARCHAR}
+        </foreach>
+
+        ,unitsid =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.unitsid,jdbcType=VARCHAR}
+        </foreach>
+        ,releaseTime =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.releaseTime,jdbcType=VARCHAR}
+        </foreach>
+        ,gmtModified =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.gmtModified,jdbcType=VARCHAR}
+        </foreach>
+        ,createTime =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.createTime,jdbcType=VARCHAR}
+        </foreach>
+        ,updateTime =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.updateTime,jdbcType=VARCHAR}
+        </foreach>
+        ,chapersId =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.chapersId,jdbcType=VARCHAR}
+        </foreach>
+
+        where id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=DECIMAL}
+        </foreach>
+    </update>
+
+    <insert id="insertPsyCLessons" parameterType="PsyCLessons">
+        insert into psy_c_lessons
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="position != null">position,</if>
+            <if test="unitsid != null">unitsid,</if>
+            <if test="gmtModified != null">gmtModified,</if>
+            <if test="releaseTime != null">releaseTime,</if>
+            <if test="createTime != null">createTime,</if>
+            <if test="updateTime != null">updateTime,</if>
+            <if test="chapersId != null">chapersId,</if>
+
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="position != null">#{position},</if>
+            <if test="unitsid != null">#{unitsid},</if>
+            <if test="gmtModified != null">#{gmtModified},</if>
+            <if test="releaseTime != null">#{releaseTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="chapersId != null">#{chapersId},</if>
+
+         </trim>
+    </insert>
+
+    <update id="updatePsyCLessons" parameterType="PsyCLessons">
+        update psy_c_lessons
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="unitsid != null">unitsid = #{unitsid},</if>
+            <if test="gmtModified != null">gmtModified = #{gmtModified},</if>
+            <if test="releaseTime != null">releaseTime = #{releaseTime},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="chapersId != null">chapersId = #{chapersId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyCLessonsById" parameterType="Long">
+        delete from psy_c_lessons where id = #{id}
+    </delete>
+
+    <delete id="deletePsyCLessonsByIds" parameterType="String">
+        delete from psy_c_lessons where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

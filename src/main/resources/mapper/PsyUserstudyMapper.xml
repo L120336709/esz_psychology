@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.PsyUserstudyMapper">
+
+    <resultMap type="PsyUserstudy" id="PsyUserstudyResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="kcId" column="kc_id"/>
+        <result property="kcName" column="kc_name"/>
+        <result property="allClasshour" column="all_classhour"/>
+        <result property="getClasshour" column="get_classhour"/>
+        <result property="getHour" column="get_hour"/>
+        <result property="schedule" column="schedule"/>
+        <result property="done" column="done"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="state" column="state"/>
+    </resultMap>
+
+    <sql id="selectPsyUserstudyVo">
+        select id, user_id, kc_id, kc_name, all_classhour, get_classhour, get_hour, schedule, done, create_time, update_time, state from psy_userstudy
+    </sql>
+
+    <select id="selectPsyUserstudyList" parameterType="PsyUserstudy" resultMap="PsyUserstudyResult">
+        <include refid="selectPsyUserstudyVo"/>
+        <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="kcId != null ">and kc_id = #{kcId}</if>
+            <if test="kcName != null  and kcName != ''">and kc_name like concat('%', #{kcName}, '%')</if>
+            <if test="allClasshour != null  and allClasshour != ''">and all_classhour = #{allClasshour}</if>
+            <if test="getClasshour != null  and getClasshour != ''">and get_classhour = #{getClasshour}</if>
+            <if test="getHour != null  and getHour != ''">and get_hour = #{getHour}</if>
+            <if test="schedule != null  and schedule != ''">and schedule = #{schedule}</if>
+            <if test="done != null  and done != ''">and done = #{done}</if>
+            <if test="state != null  and state != ''">and state = #{state}</if>
+        </where>
+    </select>
+
+    <select id="selectPsyUserstudyListGroupBy" parameterType="PsyUserstudy" resultMap="PsyUserstudyResult">
+
+        select id,p.user_id,u.real_name as kc_name ,o2.org_name as state,o.org_name as all_classhour,
+        sum(get_classhour) as get_classhour,sum(get_hour) as get_hour,sum(done) as done from psy_userstudy p
+        left join userinfo u
+		on p.user_id =u.user_id
+        left join orginfo o
+        on o.org_id=u.org_id
+         left join orginfo o2
+        on o2.org_id=o.parent_org_id
+        <where>
+            <if test="kcName != null  and kcName != ''">and u.real_name like concat('%', #{kcName}, '%')</if>
+            <if test="allClasshour != null  and allClasshour != ''">and o.org_name like concat('%', #{allClasshour}, '%')</if>
+            <if test="state != null  and state != ''">and o2.org_name like concat('%', #{state}, '%')</if>
+        </where>
+        group by user_id
+        order by done desc ,get_hour   desc,get_classhour  desc
+    </select>
+
+
+    <select id="selectPsyUserstudyById" parameterType="Long" resultMap="PsyUserstudyResult">
+        <include refid="selectPsyUserstudyVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPsyUserstudy" parameterType="PsyUserstudy" useGeneratedKeys="true" keyProperty="id">
+        insert into psy_userstudy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="kcId != null">kc_id,</if>
+            <if test="kcName != null">kc_name,</if>
+            <if test="allClasshour != null">all_classhour,</if>
+            <if test="getClasshour != null">get_classhour,</if>
+            <if test="getHour != null">get_hour,</if>
+            <if test="schedule != null">schedule,</if>
+            <if test="done != null">done,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="state != null">state,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="kcId != null">#{kcId},</if>
+            <if test="kcName != null">#{kcName},</if>
+            <if test="allClasshour != null">#{allClasshour},</if>
+            <if test="getClasshour != null">#{getClasshour},</if>
+            <if test="getHour != null">#{getHour},</if>
+            <if test="schedule != null">#{schedule},</if>
+            <if test="done != null">#{done},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="state != null">#{state},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePsyUserstudy" parameterType="PsyUserstudy">
+        update psy_userstudy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="kcId != null">kc_id = #{kcId},</if>
+            <if test="kcName != null">kc_name = #{kcName},</if>
+            <if test="allClasshour != null">all_classhour = #{allClasshour},</if>
+            <if test="getClasshour != null">get_classhour = #{getClasshour},</if>
+            <if test="getHour != null">get_hour = #{getHour},</if>
+            <if test="schedule != null">schedule = #{schedule},</if>
+            <if test="done != null">done = #{done},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="state != null">state = #{state},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyUserstudyById" parameterType="Long">
+        delete from psy_userstudy where id = #{id}
+    </delete>
+
+    <delete id="deletePsyUserstudyByIds" parameterType="String">
+        delete from psy_userstudy where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

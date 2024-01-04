@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <title>心理健康培训课程</title>
+    <link rel="stylesheet" href="/css/psy/psy.css?v=20231221"/>
+</head>
+<body  >
+<div class="bac_01">
+    <div class="bac_01_01">
+        <a href="https://www.eszedu.com"><img src="/img/psy/logo1.png" alt=""> </a>
+        <div>2023年恩施州心理健康培训课程</div>
+    </div>
+    <div class="bac_01_02">
+        <div class="bac_01_02_02"><a onclick="toIndex()">首页</a></div>
+        <div><a onclick="toPxsm()">培训说明</a></div>
+        <div><a onclick="toXxjd()">学习档案</a></div>
+    </div>
+</div>
+<div class="bac_02">
+    <div></div>
+</div>
+<div class="bac_03"  >
+    <div class="bac_03_01-01 bac_03_01" id="course"  >
+    </div>
+</div>
+<div class="copy_right" id="copy_right">
+</div>
+<th:block th:include="include :: footer"/>
+<script src="/js/psy/psy.js?v=20231222001"></script>
+<script>
+    getCourse()
+</script>
+</body>
+</html>

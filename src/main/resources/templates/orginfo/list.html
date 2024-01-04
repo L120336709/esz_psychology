@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('机构列表')" />
+</head>
+<body class="gray-bg">
+    <div class="container-div">
+	<div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="form1" autocomplete="off">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            机构名称：<input type="text" name="orgName"/>
+                        </li>
+                        <li>
+                            状态：<select name="status"
+                                       th:with="dictData=${@dict.getDictDataByTypeCode('sys_common_status')}">
+                            <option value="">所有</option>
+                            <option th:each="data : ${dictData}" th:text="${data.dataLabel}"
+                                    th:value="${data.dataValue}"></option>
+                        </select>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+							<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+		<div class="col-sm-12 select-table table-striped">
+			<table id="bootstrap-table" data-mobile-responsive="true"></table>
+		</div>
+		</div>
+    </div>
+    <th:block th:include="include :: footer" />
+	<script th:inline="javascript">
+		var datas_status = [[${@dict.getDictDataByTypeCode('sys_common_status')}]];
+		var editFlag = [[${@permission.hasPermi('orginfo:edit')}]];
+        var prefix = ctx + "orginfo";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                search: false,
+                updateUrl: prefix + "/edit/{id}",
+                detailUrl: prefix + "/detail/{id}",
+                formId: "form1",
+                modalName: "机构",
+                showSearch: false,
+                showColumns: false,
+                columns: [
+				{
+					field : 'orgName',
+					title : '机构名称' ,
+                    //align: 'center',
+                    //width: '20%',
+                    //sortable: true
+				},
+				{
+					field : 'leaders',
+					title : '负责人' ,
+                    //align: 'center',
+                    //width: '20%',
+                    //sortable: true
+				},
+				{
+					field : 'telephone',
+					title : '联系电话' ,
+                    //align: 'center',
+                    //width: '20%',
+                    //sortable: true
+				},
+				{
+					field : 'peopleNum',
+					title : '现有人数' ,
+                    //align: 'center',
+                    //width: '20%',
+                    //sortable: true
+				},
+                {
+                    field : 'status',
+                    title : '状态' ,
+                    align: 'center',
+                    //width: '20%',
+                    //sortable: true
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(datas_status, value);
+                    }
+                },
+		        {
+		            title: '操作',
+		            align: 'center',
+                    //width: '20%',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-info btn-xs " href="#" onclick="$.operate.detail(\'' + row.orgId + '\')"><i class="fa fa-info-circle"></i>详情</a> ');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.orgId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        return actions.join('')
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.PsyCChaptersMapper">
+    
+    <resultMap type="PsyCChapters" id="PsyCChaptersResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="position"    column="position"    />
+        <result property="lessonsid"    column="lessonsid"    />
+        <result property="quizid"    column="quizid"    />
+        <result property="homeworksid"    column="homeworksid"    />
+        <result property="gmtModified"    column="gmtModified"    />
+        <result property="releaseTime"    column="releaseTime"    />
+        <result property="createTime"    column="createTime"    />
+        <result property="updateTime"    column="updateTime"    />
+        <result property="structureId"    column="structureId"    />
+    </resultMap>
+
+    <sql id="selectPsyCChaptersVo">
+        select id, name, position, lessonsid, quizid, homeworksid, gmtModified, releaseTime, createTime, updateTime,structureId from psy_c_chapters
+    </sql>
+
+    <select id="selectPsyCChaptersList" parameterType="PsyCChapters" resultMap="PsyCChaptersResult">
+        <include refid="selectPsyCChaptersVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="position != null "> and position = #{position}</if>
+            <if test="lessonsid != null "> and lessonsid = #{lessonsid}</if>
+            <if test="quizid != null "> and quizid = #{quizid}</if>
+            <if test="homeworksid != null "> and homeworksid = #{homeworksid}</if>
+            <if test="gmtModified != null "> and gmtModified = #{gmtModified}</if>
+            <if test="releaseTime != null "> and releaseTime = #{releaseTime}</if>
+            <if test="createTime != null "> and createTime = #{createTime}</if>
+            <if test="updateTime != null "> and updateTime = #{updateTime}</if>
+            <if test="structureId != null "> and structureId = #{structureId}</if>
+
+        </where>
+    </select>
+    
+    <select id="selectPsyCChaptersById" parameterType="Long" resultMap="PsyCChaptersResult">
+        <include refid="selectPsyCChaptersVo"/>
+        where id = #{id}
+    </select>
+
+
+    <!--批量查找数据 -->
+    <select id="selectPsyCChaptersListByIds" parameterType="java.util.ArrayList" resultMap="PsyCChaptersResult">
+        <include refid="selectPsyCChaptersVo"/>
+        <where>
+            id in (
+            <foreach collection="list" item="id" index="index" separator=",">
+                #{id}
+            </foreach>
+            )
+        </where>
+    </select>
+
+    <!--批量插入数据 -->
+    <insert id="insertPsyCChaptersList">
+        insert into psy_c_chapters (id, name, position, lessonsid, quizid, homeworksid,
+        gmtModified, releaseTime, createTime, updateTime,structureId)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.name},#{item.position},#{item.lessonsid},#{item.quizid},#{item.homeworksid},
+            #{item.gmtModified},#{item.releaseTime},#{item.createTime},#{item.updateTime},#{item.structureId})
+        </foreach>
+    </insert>
+
+    <!--批量更新数据 -->
+    <update id="updatePsyCChaptersList" parameterType="java.util.List">
+        update psy_c_chapters set
+        name =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.name,jdbcType=VARCHAR}
+        </foreach>
+        ,position =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.position,jdbcType=VARCHAR}
+        </foreach>
+        ,lessonsid =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.lessonsid,jdbcType=VARCHAR}
+        </foreach>
+        ,quizid =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.quizid,jdbcType=VARCHAR}
+        </foreach>
+
+        ,homeworksid =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.homeworksid,jdbcType=VARCHAR}
+        </foreach>
+        ,releaseTime =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.releaseTime,jdbcType=VARCHAR}
+        </foreach>
+        ,gmtModified =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.gmtModified,jdbcType=VARCHAR}
+        </foreach>
+        ,createTime =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.createTime,jdbcType=VARCHAR}
+        </foreach>
+        ,updateTime =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.updateTime,jdbcType=VARCHAR}
+        </foreach>
+        ,structureId =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.structureId,jdbcType=VARCHAR}
+        </foreach>
+
+        where id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=DECIMAL}
+        </foreach>
+    </update>
+
+
+    <insert id="insertPsyCChapters" parameterType="PsyCChapters">
+        insert into psy_c_chapters
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="position != null">position,</if>
+            <if test="lessonsid != null">lessonsid,</if>
+            <if test="quizid != null">quizid,</if>
+            <if test="homeworksid != null">homeworksid,</if>
+            <if test="gmtModified != null">gmtModified,</if>
+            <if test="releaseTime != null">releaseTime,</if>
+            <if test="createTime != null">createTime,</if>
+            <if test="updateTime != null">updateTime,</if>
+            <if test="structureId != null">structureId,</if>
+
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="position != null">#{position},</if>
+            <if test="lessonsid != null">#{lessonsid},</if>
+            <if test="quizid != null">#{quizid},</if>
+            <if test="homeworksid != null">#{homeworksid},</if>
+            <if test="gmtModified != null">#{gmtModified},</if>
+            <if test="releaseTime != null">#{releaseTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="structureId != null">#{structureId},</if>
+
+         </trim>
+    </insert>
+
+    <update id="updatePsyCChapters" parameterType="PsyCChapters">
+        update psy_c_chapters
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="lessonsid != null">lessonsid = #{lessonsid},</if>
+            <if test="quizid != null">quizid = #{quizid},</if>
+            <if test="homeworksid != null">homeworksid = #{homeworksid},</if>
+            <if test="gmtModified != null">gmtModified = #{gmtModified},</if>
+            <if test="releaseTime != null">releaseTime = #{releaseTime},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="structureId != null">structureId = #{structureId},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyCChaptersById" parameterType="Long">
+        delete from psy_c_chapters where id = #{id}
+    </delete>
+
+    <delete id="deletePsyCChaptersByIds" parameterType="String">
+        delete from psy_c_chapters where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-invigilator-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">姓名：</label>
+				<div class="col-sm-8">
+					<input id="teachname" name="teachname" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">身份证号：</label>
+				<div class="col-sm-8">
+					<input id="idnumber" name="idnumber" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">性别：</label>
+				<div class="col-sm-8">
+					<input id="gender" name="gender" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">学段类别：</label>
+				<div class="col-sm-8">
+					<input id="academic" name="academic" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">学科代码：</label>
+				<div class="col-sm-8">
+					<input id="subject" name="subject" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">单位名称：</label>
+				<div class="col-sm-8">
+					<input id="unitname" name="unitname" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">职称职务：</label>
+				<div class="col-sm-8">
+					<input id="officialcapacity" name="officialcapacity" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">手机号码：</label>
+				<div class="col-sm-8">
+					<input id="phonenumber" name="phonenumber" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">银行账号：</label>
+				<div class="col-sm-8">
+					<input id="bankaccount" name="bankaccount" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">开户行：</label>
+				<div class="col-sm-8">
+					<input id="bankdeposit" name="bankdeposit" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">区域代码：</label>
+				<div class="col-sm-8">
+					<input id="positionarea" name="positionarea" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">考点代码：</label>
+				<div class="col-sm-8">
+					<input id="positionsite" name="positionsite" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">考场代码：</label>
+				<div class="col-sm-8">
+					<input id="positionroom" name="positionroom" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">考务组代码：</label>
+				<div class="col-sm-8">
+					<input id="positiongroup" name="positiongroup" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">人员组别代码：</label>
+				<div class="col-sm-8">
+					<input id="positionpeoplegroup" name="positionpeoplegroup" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">人员编号代码：</label>
+				<div class="col-sm-8">
+					<input id="positionpeoplecode" name="positionpeoplecode" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "invigilator"
+		$("#form-invigilator-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-invigilator-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

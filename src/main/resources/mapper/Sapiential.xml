@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.SapientialDao">
+    
+    <resultMap type="com.sundata.edu.domain.Sapiential" id="BaseResultMap">
+        <result property="id" column="id" />
+        <result property="examineename" column="examineename" />
+        <result property="idnumber" column="idnumber" />
+        <result property="examregistrationnumber" column="examregistrationnumber" />
+        <result property="examtime" column="examtime" />
+        <result property="delegationexploratorymission" column="delegationexploratorymission" />
+        <result property="thetestcode" column="thetestcode" />
+        <result property="theexaminationsitename" column="theexaminationsitename" />
+        <result property="theexaminationsiteaddress" column="theexaminationsiteaddress" />
+        <result property="building" column="building" />
+        <result property="floorlevel" column="floorlevel" />
+        <result property="theclassroomno" column="theclassroomno" />
+        <result property="seatnumber" column="seatnumber" />
+    </resultMap>
+    
+</mapper>

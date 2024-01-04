@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.UserinfoDao">
+
+    <resultMap type="com.sundata.edu.domain.Userinfo" id="BaseResultMap">
+        <result property="userId" column="user_id"/>
+        <result property="realName" column="real_name"/>
+        <result property="orgId" column="org_id"/>
+        <result property="identity" column="identity"/>
+        <result property="status" column="status"/>
+        <result property="userNo" column="user_no" />
+        <result property="nativePlace" column="nativePlace" />
+        <result property="national" column="national" />
+        <result property="gender" column="gender" />
+    </resultMap>
+
+    <select id="selectList" parameterType="com.sundata.edu.vo.UserinfoVo"
+            resultType="com.sundata.edu.vo.UserinfoVo">
+        select u.*,o.org_name,c.grade_name as gradeName, c.class_name as className
+        from userinfo u
+        join orginfo o on u.org_id=o.org_id
+        left join studentinfo s on u.user_id=s.user_id
+        left join classinfo c on c.class_id=u.class_id
+        where u.status=1
+            <if test="userId!=null and userId!=''" >
+                AND u.user_id = #{userId}
+            </if>
+            <if test="classId!=null and classId!=''" >
+                and u.class_id=#{classId}
+            </if>
+            <if test="gradeId!=null and gradeId!=''" >
+                and u.grade_id=#{gradeId}
+            </if>
+
+            <if test="identity!=null">
+                and u.identity=#{identity}
+            </if>
+            <if test="realName!=null and realName != ''">
+                AND u.real_name like concat('%', #{realName}, '%')
+            </if>
+            <if test="includeSubset!=null and includeSubset!='' and includeSubset == 2 and orgId!=null and orgId != ''">
+                AND o.org_id=#{orgId}
+            </if>
+            <if test="includeSubset!=null and includeSubset!='' and includeSubset == 1 and orgId!=null and orgId != ''">
+                AND find_in_set(#{orgId},o.paths)
+            </if>
+
+    </select>
+
+    <select id="getUserinfoByUserID" parameterType="String" resultMap="BaseResultMap">
+            select * from userinfo where user_id=  #{user_id}
+    </select>
+    
+    
+    
+    <select id="selectStudenList" parameterType="com.sundata.edu.vo.UserinfoVo"
+            resultType="com.sundata.edu.vo.ExcelStudentVo">
+        SELECT
+            s.nativePlace as nativePlace,
+            ( CASE WHEN u.`gender` = '1' THEN '男' WHEN u.`gender` = '2' THEN '女' END ) AS gender,
+            u.*,
+            mz.mzname AS nation,
+            u.real_name AS studentName,
+            s.*
+        FROM
+            studentinfo s
+            LEFT JOIN userinfo u ON u.user_id = s.user_id
+            LEFT JOIN mz mz ON mz.mz_id = u.national
+            join orginfo o on u.org_id=o.org_id
+        WHERE
+            u.status=1
+            <if test="userId!=null and userId!=''" >
+                AND u.user_id = #{userId}
+            </if>
+            <if test="classId!=null and classId!=''" >
+                and u.class_id=#{classId}
+            </if>
+            <if test="gradeId!=null and gradeId!=''" >
+                and u.grade_id=#{gradeId}
+            </if>
+            <if test="realName!=null and realName != ''">
+                AND u.real_name like concat('%', #{realName}, '%')
+            </if>
+            <if test="includeSubset!=null and includeSubset!='' and includeSubset == 2 and orgId!=null and orgId != ''">
+                AND o.org_id=#{orgId}
+            </if>
+            <if test="includeSubset!=null and includeSubset!='' and includeSubset == 1 and orgId!=null and orgId != ''">
+                AND find_in_set(#{orgId},o.paths)
+            </if>
+    </select>
+
+    <select id="getRoleUsers" resultType="com.sundata.edu.vo.UserinfoVo">
+        select u.*,o.org_name from userinfo u join orginfo o on u.org_id=o.org_id
+        join sys_user_role ur on ur.user_id=u.user_id
+        <where>
+            ur.role_id=#{roleId} AND find_in_set(#{userinfo.orgId},o.paths)
+            <if test="userinfo.identity!=null">
+                and u.identity=#{userinfo.identity}
+            </if>
+            <if test="userinfo.realName!=null and userinfo.realName != ''">
+                AND u.real_name like concat('%', #{userinfo.realName}, '%')
+            </if>
+            <if test="userinfo.status!=null">
+                and u.status=#{userinfo.status}
+            </if>
+
+        </where>
+    </select>
+    <select id="getRoleUnUsers" resultType="com.sundata.edu.vo.UserinfoVo">
+        SELECT u.*, o.org_name
+        FROM userinfo u
+        JOIN orginfo o ON u.org_id = o.org_id
+        LEFT JOIN ( SELECT * FROM sys_user_role WHERE role_id = #{roleId} ) ur ON ur.user_id = u.user_id
+        <where>
+            ur.user_id IS NULL
+            <if test="userinfo.orgId!=null and userinfo.orgId != ''">
+                and u.org_id = #{userinfo.orgId}
+            </if>
+            <if test='userinfo.params!=null and userinfo.params.hasAdmin=="1" and userinfo.params.orgId!=null and userinfo.params.orgId != ""'>
+                AND find_in_set(#{userinfo.params.orgId}, o.paths )
+            </if>
+            <if test="userinfo.identity!=null">
+                and u.identity=#{userinfo.identity}
+            </if>
+            <if test="userinfo.realName!=null and userinfo.realName != ''">
+                AND u.real_name like concat('%', #{userinfo.realName}, '%')
+            </if>
+            <if test="userinfo.status!=null">
+                and u.status=#{userinfo.status}
+            </if>
+
+        </where>
+    </select>
+
+    <select id="getUserByidentity" resultType="com.sundata.edu.vo.UserinfoVo" parameterType="com.sundata.edu.vo.UserinfoVo">
+
+SELECT
+	u.real_name,
+	u.user_id,
+	u.class_id,
+	u.grade_id,
+	c.grade_name,
+	c.class_name
+FROM
+	userinfo u
+	left  JOIN classinfo c on c.class_id = u.class_id
+where org_id IN (SELECT org_id FROM orginfo where find_in_set(#{orgId},paths)) and identity=#{identity}
+        <if test="classIdList != null and classIdList.size() > 0 ">
+            AND u.class_id IN
+            <foreach collection="classIdList" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+</select>
+
+    <!-- 除去用到的老师 -->
+    <select id="getTeacherMapExcept" resultType="com.sundata.edu.vo.UserinfoVo" parameterType="com.sundata.edu.vo.UserinfoVo">
+        SELECT
+        DISTINCT(u.real_name),
+        u.user_id,
+        u.class_id,
+        u.grade_id,
+        c.grade_name,
+        c.class_name
+        FROM
+        userinfo u
+        left  JOIN classinfo c on c.class_id = u.class_id
+        where org_id IN (SELECT org_id FROM orginfo where find_in_set(#{orgId},paths)) and identity=#{identity}
+        and u.user_id not in (SELECT user_id from user_classinfo)
+        <if test="classIdList != null and classIdList.size() > 0 ">
+                AND u.class_id IN
+                <foreach collection="classIdList" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+    </select>
+
+    <!-- 查询学生总体请款 -->
+    <select id="selectOverallList" parameterType="com.sundata.edu.vo.OverallVo"
+            resultType="com.sundata.edu.domain.OverallBean">
+        SELECT ui.user_id as studentId, ui.real_name as studentName,
+            ci.grade_name as gradeName, ci.class_name as className, oi.org_name as orgName
+            from userinfo ui
+            INNER JOIN orginfo oi ON ui.org_id = oi.org_id
+            LEFT JOIN classinfo ci ON ui.class_id = ci.class_id
+        WHERE ui.identity = '102'
+        <if test="studentId!=null and studentId != ''">
+            AND ui.user_id = #{studentId}
+        </if>
+        <if test="gradeId !=null and gradeId != ''">
+            AND ui.grade_id = #{gradeId}
+        </if>
+        <if test="classId!=null and classId != ''">
+            AND ui.class_id = #{classId}
+        </if>
+        <if test="orgName!=null and orgName != ''">
+            AND oi.org_name like concat('%',#{orgName},'%')
+        </if>
+        <if test="classIdList != null and classIdList.size() > 0 ">
+            AND ui.class_id IN
+            <foreach collection="classIdList" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        <if test="includeSubset!=null and includeSubset!='' and includeSubset == 2 and orgId!=null and orgId != ''">
+            AND oi.org_id=#{orgId}
+        </if>
+        <if test="includeSubset!=null and includeSubset!='' and includeSubset == 1 and orgId!=null and orgId != ''">
+            AND find_in_set(#{orgId},oi.paths)
+        </if>
+    </select>
+
+
+    <select id="selectOneStudent" parameterType="com.sundata.edu.vo.UserinfoVo"
+            resultType="com.sundata.edu.vo.StudentinfoVo">
+    SELECT
+    s.nativePlace as nativePlace,
+	u.*,
+	s.*,
+	u.real_name as studentName,
+	c.grade_name as gradeName,
+	c.class_name as className,
+	o.org_name as orgName,
+	u.national as nations
+    FROM
+        userinfo u
+        LEFT JOIN studentinfo s on s.user_id = u.user_id
+        left join classinfo c on c.class_id = u.class_id
+        left join orginfo o on o.org_id = u.org_id
+    WHERE
+	u.user_id = #{userId,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 根据id查询单个 -->
+    <select id="selectOneOverallInfo" parameterType="com.sundata.edu.vo.OverallVo"
+            resultType="com.sundata.edu.domain.OverallBean">
+        SELECT ui.user_id as studentId, ui.real_name as studentName,
+            ci.grade_name as gradeName, ci.class_name as className, oi.org_name as orgName
+            from userinfo ui, classinfo ci, orginfo oi
+            where 1 = 1
+            AND ui.class_id = ci.class_id
+            AND ui.org_id = oi.org_id
+            AND ui.identity = '102'
+            AND ui.user_id = #{studentId}
+    </select>
+
+
+    <!--  根据年级班级id查询学生 -->
+    <select id="getStudentsByGradeClassId" parameterType="java.util.Map" resultType="java.util.Map">
+          SELECT user_id as id, real_name as name FROM userinfo where 1 = 1
+          and identity = '102'
+          AND org_id IN (SELECT org_id FROM orginfo where find_in_set(#{orgId},paths))
+          <if test="gradeId != null and gradeId != ''">
+              AND  grade_id = #{gradeId}
+          </if>
+            <if test="classId != null and classId != ''">
+                AND class_id= #{classId}
+            </if>
+        <if test="classIdList != null and classIdList.size() > 0 ">
+            AND class_id IN
+            <foreach collection="classIdList" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+
+    <select id="searchUser" parameterType="com.sundata.edu.vo.UserinfoVo" resultType="com.sundata.edu.vo.UserinfoVo">
+        SELECT a.*,b.org_name,d.grade_name,d.class_name from userinfo a
+        LEFT JOIN orginfo b on a.org_id=b.org_id
+        left join classinfo d on a.class_id = d.class_id
+        where a.identity = '102'
+            <if test="realName!=null and realName != ''">
+                AND a.real_name like concat('%', #{realName}, '%')
+            </if>
+            <if test="status!=null">
+                and a.status=#{status}
+            </if>
+            <if test="userId!=null and userId != ''">
+                AND a.user_id = #{userId}
+            </if>
+            <if test="orgIds!=null">
+                and a.org_id in
+                <foreach  item="item" collection="orgIds" index="index"  open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        limit 20;
+    </select>
+
+    <select id="getUserListByIdCard" resultType="com.sundata.edu.domain.Userinfo">
+        select * from userinfo
+        <where>
+            <if test="list!=null">
+                and id_card in
+                <foreach  item="item" collection="list" index="index"  open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getUserInfoByCondition" parameterType="java.util.Map" resultType="com.sundata.edu.domain.Userinfo">
+        SELECT * FROM userinfo where
+            status= 1
+        <if test="idCardList != null and idCardList.size() > 0 ">
+            AND id_card IN
+            <foreach collection="idCardList" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        <if test="orgIds != null and orgIds.size() > 0 ">
+            AND org_id IN
+            <foreach collection="orgIds" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+
+    <select id="getMenuOrgAdmin" resultType="integer">
+        SELECT menu_id from sys_role_menu where role_id in
+            (
+                SELECT role_id from sys_user_role where user_id =
+                (
+                    SELECT user_id from userinfo where `status` = 1 and identity in (105,104) and org_id  = #{orgId} LIMIT 1
+                )
+            )
+    </select>
+
+</mapper>

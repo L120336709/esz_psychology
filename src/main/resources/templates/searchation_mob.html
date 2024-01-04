@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <div class="title" id="title"></div>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script >
+        (function (doc,win){
+            var docEl = document.documentElement,
+                resizeEvt = 'orientationchange' in window?'orientationchange':'resize',
+                reclc = function (){
+                    var clientWidth = docEl.clientWidth;
+                    if (!clientWidth)return;
+                    if (clientWidth>=750){
+                        docEl.style.fontSize = '100px';
+                    }else {
+                        docEl.style.fontSize = 100 * (clientWidth / 750)+'px';
+                    }
+                };
+            if (!doc.addEventListener)return;
+            win.addEventListener(resizeEvt,reclc,false);
+            doc.addEventListener('DOMContentLoaded',reclc,false);
+        })(document,window);
+    </script>
+</head>
+<body>
+<div class="header">
+    <img id="logo" src="http://www.eszedu.com/resource/enshi/static/images/logo1.png" >
+</div>
+<form  id="formid" >
+    <div class="search">
+        <div class="search-input">
+            <lable>考生姓名</lable><input type="text" id="examineename" placeholder="请输入你的姓名" class="info-input">
+        </div>
+        <div class="search-input">
+            <lable>准考证号</lable><input id="examregistrationnumber" placeholder="请输入你的准考证号" type="text" class="info-input">
+        </div>
+        <div class="search-btn">
+            <button class="btn" id="btnSubmit" >查询</button>
+            <button class="btn"  onclick="form_set()">重置</button>
+        </div>
+    </div>
+    <div class="content" id="showinfo">
+        <table class="tb">
+            <tr class="row">
+                <td class="option">姓名</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">准考证号</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">考点名称</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">考点地址</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">第一场考场代码</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">第一场教室号</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">第二场考场代码</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">第二场教室号</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">第三场考场代码</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option bnone">第三场教室号</td>
+                <td class="option-con bnone"></td>
+            </tr>
+        </table>
+    </div>
+</form>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script>
+    $(document).ready(function() {
+        $("#btnSubmit").click(function() {
+            if (Check()) {
+                get_info();
+            }
+        });
+    });
+    //标题
+    $(function(){
+        $.ajax({
+            url:'/teacherstitletb/table/selectEndurance',
+            data:{'id':1},
+            dataType:'json',
+            type:'post',
+            success:function(data){
+                if (data.code==200) {
+                    var titlelist= {};
+                    titlelist = data.data; //数组
+                    if( titlelist.length!=0){
+                        bon= '<div class="title">' + titlelist.teacherstitle + '</div>'
+                        $("#title").html(bon);
+                        return false;
+                    }else {
+                        alert("系统有误请稍后重试....");
+                        return false;
+                    }
+                } else {
+                    alert("系统有误请稍后重试....");
+                    return false;
+                }
+            },
+        });
+    })
+    // 查询信息
+    function get_info(){
+        var examineename = $("#examineename").val();
+        var examregistrationnumber = $("#examregistrationnumber").val();
+        $.ajax({
+            url:'/teacherexamination/table/selectEndurance',
+            data:{'examineename':examineename, 'examregistrationnumber':examregistrationnumber},
+            dataType:'json',
+            type:'post',
+            success:function(data){
+                if (data.code==200) {
+                    var byts= {};
+                    byts = data.data; //数组
+                    if(byts.length!=0){
+                        var con = '<table class="tb">'
+                        con += '<tr class="row"><td class="option">姓名</td>'
+                        con += '<td class="option-con">' + byts.examineename + '</td></tr>'
+                        con += '<tr class="row"><td class="option">准考证号</td>'
+                        con += '<td class="option-con">' + byts.examregistrationnumber + '</td></tr>'
+                        con += '<tr class="row"><td class="option">考点名称</td>'
+                        con += '<td class="option-con">' + byts.theexaminationsitename + '</td></tr>'
+                        con += '<tr class="row"><td class="option">考点地址</td>'
+                        con += '<td class="option-con">' + byts.theexaminationsiteaddress + '</td></tr>'
+                        con += '<tr class="row"><td class="option">第一场考场代码</td>'
+                        con += '<td class="option-con">' + byts.thefirstsession + '</td></tr>'
+                        con += '<tr class="row"><td class="option">第一场教室号</td>'
+                        con += '<td class="option-con">' + byts.classroomnumberone + '</td></tr>'
+                        con += '<tr class="row"><td class="option">第二场考场代码</td>'
+                        con += '<td class="option-con">' + byts.thefirstgame + '</td></tr>'
+                        con += '<tr class="row"><td class="option">第二场教室号</td>'
+                        con += '<td class="option-con">' + byts.classroomnumbertwo + '</td></tr>'
+                        con += '<tr class="row"><td class="option">第三场考场代码</td>'
+                        con += '<td class="option-con">' + byts.thethirdsession + '</td></tr>'
+                        con += '<tr class="row"><td class="option bnone">第三场教室号</td>'
+                        con += '<td class="option-con bnone">' + byts.classroomnumberthree + '</td></tr>'
+                        $("#showinfo").html(con);
+                        return false;
+                    }else{
+                        alert("请检查准考证号或姓名输入是否正确！");
+                        return false;
+                    }
+                    alert("请检查准考证号或姓名输入是否正确!");
+                    return false;
+
+                } else {
+                    alert("请检查准考证号或姓名输入是否正确!");
+                    return false;
+                }
+            },
+        });
+
+        return false;
+    }
+    // 重置表单
+    function form_set(){
+        document.getElementById("formid").reset();
+        return false;
+    }
+
+    function Check() {
+        if (!/^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/.test($("#examineename").val())) {
+            alert("姓名格式错误！");
+            // $("#examineename").focus();
+            return false;
+        }
+        if ($("#examregistrationnumber").val() == "") {
+            alert("准考证号不能为空！");
+            // $("#examregistrationnumber").focus();
+            return false;
+        }
+        if ($("#examineename").val() == "") {
+            alert("姓名不能为空！");
+            // $("#examineename").focus();
+            return false;
+        }
+        // if ($("#Yzm").val() != $.cookie('ValidateCode')) {
+        //     alert("验证码错误！")
+        //     $("#Yzm").focus();
+        //     return false;
+        // }
+        return true;
+    }
+</script>
+
+</body>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    .title{
+        padding: 1px;
+        text-align: center;
+        font-size: 5px;
+        font-weight: bold;
+        color: #3784e4;
+        letter-spacing: 2px;
+        margin-top:1px;
+    }
+    .info-item span{
+        width: 70px;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 16px;
+    }
+    .btn{
+        width:100%;
+        margin: 10px auto;
+        text-align: center;
+    }
+    .btn button{
+        width: 50px;
+        height: 30px;
+        margin: 0 20px;
+        background-color: #98ded9;
+        color: #252525;
+        border: none;
+        border-radius: 6px;
+    }
+    .btn button:hover{
+        cursor: pointer;
+        background-color: #6f9eaf;
+        color: #222831;
+        border: none;
+    }
+    .content{
+        width: 90%;
+        margin: 5px auto;
+        padding: 10px;
+        text-align: center;
+    }
+    .tb{
+        width: 100%;
+        text-align: left;
+        border: 1px solid #333333;
+    }
+    .row{
+        height: 30px;
+    }
+    .option{
+        width: 45%;
+        padding: 6px 8px;
+        background-color: #d9e4dd;
+        color: #000000;
+        font-size: 18px;
+        border-bottom: 1px solid #333333;
+    }
+    .option-con{
+        padding: 6px 8px;
+        border-bottom: 1px solid #333333;
+        border-left: 1px solid #333333;
+    }
+    .bnone{
+        border-bottom: none;
+    }
+
+    ul{
+        list-style: none;
+    }
+    a{
+        text-decoration: none;
+    }
+
+    body{
+        margin: 0px;
+        padding: 0px;
+        font-size: 16px;
+        background-color: #F5F5F5;
+    }
+    .header{
+        height: 1rem;
+        line-height: 0.65rem;
+        background: #3784E4;
+        text-align: left;
+    }
+    .title{
+        margin-top: 0.1rem;
+        height: 0.8rem;
+        line-height: 0.8rem;
+        text-align: center;
+        font-size: 0.30rem;
+        background-color: #fff;
+        font-weight: bold;
+        color: #3784e4;
+    }
+
+    #logo{
+        margin-left: 0.3rem;
+        margin-top: 0.3rem;
+        width: 2.6rem;
+    }
+    .search{
+        background-color: white;
+        padding: 0.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        flex-direction: column;
+        margin-top: 0.03rem;
+    }
+    .info-input{
+        margin-top: 0.2rem;
+        width: 4.5rem;
+        height: 0.38rem;
+        margin-left: 0.1rem;
+        margin-right: 0.1rem;
+    }
+    .search-input{
+
+    }
+    .search-btn{
+        margin-top: 0.2rem;
+        width: 3.5rem;
+        display: flex;
+        align-items:flex-start ;
+        height: 0.45rem;
+        justify-content: space-evenly;
+        align: center;
+    }
+    .btn{
+        width: 1.5rem;
+        height: 0.38rem;
+        border-radius: 0.1rem;
+    }
+</style>
+</html>

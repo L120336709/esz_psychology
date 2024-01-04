@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.GradeinfoDao">
+    
+    <resultMap type="com.sundata.edu.domain.Gradeinfo" id="BaseResultMap">
+        <result property="id" column="id" />
+        <result property="gradeId" column="grade_id" />
+        <result property="gradeCode" column="grade_code" />
+        <result property="gradeName" column="grade_name" />
+        <result property="schoolId" column="school_id" />
+    </resultMap>
+
+
+<!--    SELECT DISTINCT(gi.grade_id) as id, gi.grade_name as name FROM gradeinfo gi,userinfo ui
+    where 1 = 1
+    and gi.grade_id = ui.grade_id
+    <if test="classIdList != null and classIdList.size() > 0 ">
+        AND ui.class_id IN
+        <foreach collection="classIdList" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </if>-->
+
+    <select id="selectGradeInfos" resultType="java.util.Map" parameterType="java.util.Map">
+        select grade_id as id, grade_name as name from classinfo where status = 1 GROUP BY grade_id, grade_name
+    </select>
+
+</mapper>

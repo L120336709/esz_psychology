@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('列表')" />
+</head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								姓名：<input type="text" name="teachname"/>
+							</li>
+
+							<li>
+								身份证号：<input type="text" name="idnumber"/>
+							</li>
+
+							<li>
+								性别：<input type="text" name="gender"/>
+							</li>
+
+							<li>
+								学段类别：<input type="text" name="academic"/>
+							</li>
+
+							<li>
+								学科代码：<input type="text" name="subject"/>
+							</li>
+
+							<li>
+								单位名称：<input type="text" name="unitname"/>
+							</li>
+
+							<li>
+								职称职务：<input type="text" name="officialcapacity"/>
+							</li>
+
+<!--							<li>-->
+<!--								手机号码：<input type="text" name="phonenumber"/>-->
+<!--							</li>-->
+
+<!--							<li>-->
+<!--								银行账号：<input type="text" name="bankaccount"/>-->
+<!--							</li>-->
+
+<!--							<li>-->
+<!--								开户行：<input type="text" name="bankdeposit"/>-->
+<!--							</li>-->
+
+<!--							<li>-->
+<!--								区域代码：<input type="text" name="positionarea"/>-->
+<!--							</li>-->
+
+<!--							<li>-->
+<!--								考点代码：<input type="text" name="positionsite"/>-->
+<!--							</li>-->
+
+<!--							<li>-->
+<!--								考场代码：<input type="text" name="positionroom"/>-->
+<!--							</li>-->
+
+<!--							<li>-->
+<!--								考务组代码：<input type="text" name="positiongroup"/>-->
+<!--							</li>-->
+
+<!--							<li>-->
+<!--								人员组别代码：<input type="text" name="positionpeoplegroup"/>-->
+<!--							</li>-->
+
+<!--							<li>-->
+<!--								人员编号代码：<input type="text" name="positionpeoplecode"/>-->
+<!--							</li>-->
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" >
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" >
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" >
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" >
+						<i class="fa fa-download"></i> 导出
+				 </a>
+				<a class="btn btn-info" onclick="$.table.importExcel()" >
+					<i class="fa fa-upload"></i> 导入
+				</a>
+				<a class="btn btn-success" onclick="add_account()" >
+					<i class="fa fa-plus"></i> 生成监考安排表
+				</a>
+				<input type="hidden" id="changcinum">
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+	 <div>
+		 <form id="importForm" name="importFile" class="form-horizontal" method="post"
+			   enctype="multipart/form-data" hidden="hidden">
+			 <div class="col-xs-offset-1">
+				 <input id="file" name="file" class="file-loading" type="file" multiple accept=".xls,.xlsx">
+				 <div class="mt10 pt5">
+					 <input type="checkbox" id="updateSupport" name="updateSupport" title="如果登录账户已经存在，更新这条数据。"> 是否更新已经存在的用户数据
+					 &nbsp;	<a onclick="$.table.importTemplate()" class="btn btn-default btn-xs"><i class="fa fa-file-excel-o"></i> 下载模板</a>
+				 </div>
+				 <font color="red" class="pull-left mt10">
+					 提示：仅允许导入“xls”或“xlsx”格式文件！
+				 </font>
+			 </div>
+		 </form>
+	 </div>
+
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('rfsj:invigilator:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('rfsj:invigilator:remove')}]];
+        var prefix = ctx + "invigilator";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+				importUrl: prefix + "/importData",
+				importTemplateUrl: prefix + "/importTemplate",
+                modalName: "",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'teachid', 
+					title : '',
+					visible: false
+				},
+				{
+					field : 'teachname', 
+					title : '姓名',
+					sortable: true
+				},
+				{
+					field : 'idnumber', 
+					title : '身份证号',
+					sortable: true
+				},
+				{
+					field : 'gender', 
+					title : '性别',
+					sortable: true
+				},
+				{
+					field : 'academic', 
+					title : '学段类别',
+					sortable: true
+				},
+				{
+					field : 'subject', 
+					title : '学科代码',
+					sortable: true
+				},
+				{
+					field : 'unitname', 
+					title : '单位名称',
+					sortable: true
+				},
+				{
+					field : 'officialcapacity', 
+					title : '职称职务',
+					sortable: true
+				},
+				{
+					field : 'phonenumber', 
+					title : '手机号码',
+					sortable: true
+				},
+				{
+					field : 'bankaccount', 
+					title : '银行账号',
+					sortable: true
+				},
+				{
+					field : 'bankdeposit', 
+					title : '开户行',
+					sortable: true
+				},
+				{
+					field : 'positionarea', 
+					title : '岗位代码',
+					sortable: true
+				},
+				// {
+				// 	field : 'positionsite',
+				// 	title : '考点代码',
+				// 	sortable: true
+				// },
+				// {
+				// 	field : 'positionroom',
+				// 	title : '考场代码',
+				// 	sortable: true
+				// },
+				// {
+				// 	field : 'positiongroup',
+				// 	title : '考务组代码',
+				// 	sortable: true
+				// },
+				// {
+				// 	field : 'positionpeoplegroup',
+				// 	title : '人员组别代码',
+				// 	sortable: true
+				// },
+				// {
+				// 	field : 'positionpeoplecode',
+				// 	title : '人员编号代码',
+				// 	sortable: true
+				// },
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs " href="#" onclick="$.operate.edit(\'' + row.teachid + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs " href="#" onclick="$.operate.remove(\'' + row.teachid + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+<script>
+
+	function add_account() {
+		var index = layer.open({            //打开layer弹出框
+			type: 1,                     //类型
+			skin: "layui-layer-rim",     //皮肤类型，在skin文件夹中
+			area: ["400px", "400px"],    //范围大小
+			title: "标题",               //定义标题
+			content: '<div style="padding: 30px 20px;; line-height: 22px; ">考试场次：<input id="firstpwd" type="text" placeholder="请输入第几场考试,数字即可"></div>'//弹出的子页面
+			,       //输出的字符串，定义弹出框的html页面
+			btn: ['确定', '取消'],　　　　//按钮
+			yes: function (index, layero) { //确定按钮的处理函数
+				var session = document.getElementById("firstpwd").value;
+				randomSorting(session);
+				layer.close(index);
+			}, cancel: function (index) {
+				layer.close(index);
+			}
+
+		});
+	}
+
+	function randomSorting(sessions) {
+		$.ajax({
+			url:'/invigilator/randomSortings',
+			dataType:'json',
+			type:'post',
+			success:function(data){
+				if (data.code==200) {
+					var url = "invigilator/exportCustomerFileDetailPDFReport?sessions="+sessions;
+					console.log(url);
+					window.open(url);
+				} else {
+					alert("请检查准考证号或姓名输入是否正确!");
+					return false;
+				}
+			},
+		});
+	}
+
+</script>
+</body>
+</html>

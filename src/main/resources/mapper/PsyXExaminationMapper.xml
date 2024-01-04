@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.PsyXExaminationMapper">
+    
+    <resultMap type="PsyXExamination" id="PsyXExaminationResult">
+        <result property="id"    column="id"    />
+        <result property="kcId"    column="kc_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="kcName"    column="kc_name"    />
+        <result property="quesTotalnum"    column="ques_totalnum"    />
+        <result property="quesTruenum"    column="ques_truenum"    />
+        <result property="quesFalsenum"    column="ques_falsenum"    />
+        <result property="quesNullnum"    column="ques_nullnum"    />
+        <result property="passed"    column="passed"    />
+        <result property="startTime"    column="startTime"    />
+        <result property="endTime"    column="endTime"    />
+        <result property="quesList"    column="ques_list"    />
+        <result property="anwserList"    column="anwser_list"    />
+
+        <result property="score"    column="score"    />
+
+    </resultMap>
+
+    <sql id="selectPsyXExaminationVo">
+        select id, user_id,kc_id, kc_name, ques_totalnum, ques_truenum, ques_falsenum, ques_nullnum,
+        passed, startTime, endTime, ques_list, anwser_list,score from psy_x_examination
+    </sql>
+
+    <select id="selectPsyXExaminationList" parameterType="PsyXExamination" resultMap="PsyXExaminationResult">
+        <include refid="selectPsyXExaminationVo"/>
+        <where>
+
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="kcId != null "> and kc_id = #{kcId}</if>
+            <if test="kcName != null  and kcName != ''"> and kc_name like concat('%', #{kcName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyXExaminationById" parameterType="Long" resultMap="PsyXExaminationResult">
+        <include refid="selectPsyXExaminationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyXExamination" parameterType="PsyXExamination" useGeneratedKeys="true" keyProperty="id">
+        insert into psy_x_examination
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="userId != null">user_id,</if>
+            <if test="kcId != null">kc_id,</if>
+            <if test="kcName != null">kc_name,</if>
+            <if test="quesTotalnum != null">ques_totalnum,</if>
+            <if test="quesTruenum != null">ques_truenum,</if>
+            <if test="quesFalsenum != null">ques_falsenum,</if>
+            <if test="quesNullnum != null">ques_nullnum,</if>
+            <if test="passed != null">passed,</if>
+            <if test="startTime != null">startTime,</if>
+            <if test="endTime != null">endTime,</if>
+            <if test="quesList != null">ques_list,</if>
+            <if test="anwserList != null">anwser_list,</if>
+            <if test="score != null">score,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="userId != null">#{userId},</if>
+            <if test="kcId != null">#{kcId},</if>
+            <if test="kcName != null">#{kcName},</if>
+            <if test="quesTotalnum != null">#{quesTotalnum},</if>
+            <if test="quesTruenum != null">#{quesTruenum},</if>
+            <if test="quesFalsenum != null">#{quesFalsenum},</if>
+            <if test="quesNullnum != null">#{quesNullnum},</if>
+            <if test="passed != null">#{passed},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="quesList != null">#{quesList},</if>
+            <if test="anwserList != null">#{anwserList},</if>
+            <if test="score != null">#{score},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyXExamination" parameterType="PsyXExamination">
+        update psy_x_examination
+        <trim prefix="SET" suffixOverrides=",">
+
+
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="kcId != null">kc_id = #{kcId},</if>
+            <if test="kcName != null">kc_name = #{kcName},</if>
+            <if test="quesTotalnum != null">ques_totalnum = #{quesTotalnum},</if>
+            <if test="quesTruenum != null">ques_truenum = #{quesTruenum},</if>
+            <if test="quesFalsenum != null">ques_falsenum = #{quesFalsenum},</if>
+            <if test="quesNullnum != null">ques_nullnum = #{quesNullnum},</if>
+            <if test="passed != null">passed = #{passed},</if>
+            <if test="startTime != null">startTime = #{startTime},</if>
+            <if test="endTime != null">endTime = #{endTime},</if>
+            <if test="quesList != null">ques_list = #{quesList},</if>
+            <if test="anwserList != null">anwser_list = #{anwserList},</if>
+            <if test="score != null">score = #{score},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyXExaminationById" parameterType="Long">
+        delete from psy_x_examination where id = #{id}
+    </delete>
+
+    <delete id="deletePsyXExaminationByIds" parameterType="String">
+        delete from psy_x_examination where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

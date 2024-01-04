@@ -1,0 +1,9 @@
+.words{
+    font-weight:bold;
+    font-size: 20px;
+    padding: 3px 0;
+    white-space: nowrap;
+}
+a{
+    color: #0066cc;
+}

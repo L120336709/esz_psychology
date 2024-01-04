@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.PsyCStructureMapper">
+    
+    <resultMap type="PsyCStructure" id="PsyCStructureResult">
+        <result property="id"    column="id"    />
+        <result property="courseName"    column="courseName"    />
+        <result property="chaptersid"    column="chaptersid"    />
+        <result property="examsid"    column="examsid"    />
+        <result property="createTime"    column="createTime"    />
+        <result property="updateTime"    column="updateTime"    />
+        <result property="courseId"    column="courseId"    />
+
+    </resultMap>
+
+    <sql id="selectPsyCStructureVo">
+        select id, courseName, chaptersid, examsid, createTime, updateTime,courseId from psy_c_structure
+    </sql>
+
+    <select id="selectPsyCStructureList" parameterType="PsyCStructure" resultMap="PsyCStructureResult">
+        <include refid="selectPsyCStructureVo"/>
+        <where>  
+            <if test="courseName != null  and courseName != ''"> and courseName like concat('%', #{courseName}, '%')</if>
+            <if test="chaptersid != null "> and chaptersid = #{chaptersid}</if>
+            <if test="examsid != null "> and examsid = #{examsid}</if>
+            <if test="createTime != null "> and createTime = #{createTime}</if>
+            <if test="updateTime != null "> and updateTime = #{updateTime}</if>
+            <if test="courseId != null "> and courseId = #{courseId}</if>
+
+        </where>
+    </select>
+    
+    <select id="selectPsyCStructureById" parameterType="Long" resultMap="PsyCStructureResult">
+        <include refid="selectPsyCStructureVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyCStructure" parameterType="PsyCStructure">
+        insert into psy_c_structure
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="courseName != null">courseName,</if>
+            <if test="chaptersid != null">chaptersid,</if>
+            <if test="examsid != null">examsid,</if>
+            <if test="createTime != null">createTime,</if>
+            <if test="updateTime != null">updateTime,</if>
+            <if test="courseId != null">courseId,</if>
+
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="courseName != null">#{courseName},</if>
+            <if test="chaptersid != null">#{chaptersid},</if>
+            <if test="examsid != null">#{examsid},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="courseId != null">#{courseId},</if>
+
+         </trim>
+    </insert>
+
+    <update id="updatePsyCStructure" parameterType="PsyCStructure">
+        update psy_c_structure
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseName != null">courseName = #{courseName},</if>
+            <if test="chaptersid != null">chaptersid = #{chaptersid},</if>
+            <if test="examsid != null">examsid = #{examsid},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="courseId != null">courseId = #{courseId},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyCStructureById" parameterType="Long">
+        delete from psy_c_structure where id = #{id}
+    </delete>
+
+    <delete id="deletePsyCStructureByIds" parameterType="String">
+        delete from psy_c_structure where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

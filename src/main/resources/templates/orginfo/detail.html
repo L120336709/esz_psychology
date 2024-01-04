@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('查看机构详情')" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-orginfo-edit" th:object="${orginfo}" autocomplete="off">
+        <input id="orgId" name="orgId" th:field="*{orgId}"  type="hidden">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">组织机构名称：</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">[[*{orgName}]]</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">负责人：</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">[[*{leaders}]]</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">联系电话：</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">[[*{telephone}]]</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">现有人数：</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">[[*{peopleNum}]]</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">领导人数：</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">[[*{leadersNum}]]</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">专任教师数：</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">[[*{teacherNum}]]</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">工勤人数：</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">[[*{logisticsNum}]]</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">学生人数：</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">[[*{studentNum}]]</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">班级数：</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">[[*{classNum}]]</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">专业技术岗位核定数：</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">[[*{technologySanctionedNum}]]</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">专业技术岗位实际聘任数：</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">[[*{technologyActualNum}]]</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">超（空）岗位情况：</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">[[*{deviationInfo}]]</p>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+</body>
+</html>

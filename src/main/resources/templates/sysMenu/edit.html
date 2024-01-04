@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('修改菜单')" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form1" th:object="${sysMenu}" autocomplete="off">
+        <input name="menuId" type="hidden" th:field="*{menuId}"/>
+        <input id="treeId" name="parentId" type="hidden" th:field="*{parentId}"/>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">上级菜单：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" id="treeName" readonly="true"
+                       th:value="${sysParentMenu==null?'无':(sysParentMenu.menuName == null ? '无' : sysParentMenu.menuName)}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">菜单类型：</label>
+            <div class="col-sm-8">
+                <div class="radio-box" th:each="data : ${@dict.getDictDataByTypeCode('sys_menu_type')}">
+                    <input type="radio" th:id="${data.dataId}" name="menuType" th:value="${data.dataValue}"
+                           th:field="*{menuType}">
+                    <label th:for="${data.dataId}" th:text="${data.dataLabel}"></label>
+                </div>
+<!--                <label class="radio-box"> <input type="radio" th:field="*{menuType}" name="menuType" value="1"/> 目录-->
+<!--                </label>-->
+<!--                <label class="radio-box"> <input type="radio" th:field="*{menuType}" name="menuType" value="2"/> 菜单-->
+<!--                </label>-->
+<!--                <label class="radio-box"> <input type="radio" th:field="*{menuType}" name="menuType" value="3"/> 按钮-->
+<!--                </label>-->
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">菜单名称：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="menuName" id="menuName" th:field="*{menuName}" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">请求地址：</label>
+            <div class="col-sm-8">
+                <input id="url" name="url" class="form-control" type="text" th:field="*{url}" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">权限标识：</label>
+            <div class="col-sm-8">
+                <input id="perms" name="perms" class="form-control" type="text" th:field="*{perms}" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">显示排序：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="sort" th:field="*{sort}" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图标：</label>
+            <div class="col-sm-8">
+                <input id="icon" name="icon" class="form-control" type="text" placeholder="选择图标" th:field="*{icon}" autocomplete="off"/>
+                <div class="ms-parent" style="width: 100%;">
+                    <div class="icon-drop animated flipInX" style="display: none;max-height:200px;overflow-y:auto">
+                        <div data-th-include="sysMenu/icon"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">菜单状态：</label>
+            <div class="col-sm-8">
+                <div class="radio-box" th:each="data : ${@dict.getDictDataByTypeCode('sys_common_status')}">
+                    <input type="radio" th:id="${data.dataId}" name="status" th:value="${data.dataValue}"
+                           th:field="*{status}">
+                    <label th:for="${data.dataId}" th:text="${data.dataLabel}"></label>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<script>
+    var prefix = ctx + "sysMenu";
+
+    $(function () {
+        menuVisible($('input[name="menuType"]:checked').val());
+    });
+
+    $("#form1").validate({
+        rules: {
+            menuType: {
+                required: true,
+            },
+            menuName: {
+                required: true,
+            },
+            sort: {
+                required: true,
+                digits: true
+            },
+        },
+        messages: {}
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form1').serialize());
+        }
+    }
+
+    $(function () {
+        $("input[name='icon']").focus(function () {
+            $(".icon-drop").show();
+        });
+        $("#form1").click(function (event) {
+            var obj = event.srcElement || event.target;
+            if (!$(obj).is("input[name='icon']")) {
+                $(".icon-drop").hide();
+            }
+        });
+        $(".icon-drop").find(".ico-list i").on("click",
+            function () {
+                $('#icon').val($(this).attr('class'));
+            });
+        $("input[name='menuType']").on('ifChecked',
+            function (event) {
+                var menuType = $(event.target).val();
+                menuVisible(menuType);
+            });
+    });
+
+    function menuVisible(menuType) {
+        if (menuType == 1) {
+            $("#url").parents(".form-group").hide();
+            $("#perms").parents(".form-group").hide();
+            $("#icon").parents(".form-group").show();
+        } else if (menuType == 2) {
+            $("#url").parents(".form-group").show();
+            $("#perms").parents(".form-group").show();
+            $("#icon").parents(".form-group").hide();
+        } else if (menuType == 3) {
+            $("#url").parents(".form-group").hide();
+            $("#perms").parents(".form-group").show();
+            $("#icon").parents(".form-group").hide();
+        }
+    }
+
+</script>
+</body>
+</html>

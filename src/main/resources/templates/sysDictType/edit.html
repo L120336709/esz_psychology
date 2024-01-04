@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:include="include :: header('新增字典数据')" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form1" th:object="${sysDictType}" autocomplete="off">
+        <input id="typeId" name="typeId" type="hidden" th:field="*{typeId}"/>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">字典名称：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="typeName" id="typeName"
+                       th:field="*{typeName}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">字典类型：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="typeCode" id="typeCode"
+                       th:field="*{typeCode}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="col-sm-8">
+                <div class="radio-box" th:each="data : ${@dict.getDictDataByTypeCode('sys_common_status')}">
+                    <input type="radio" th:id="${data.dataId}" name="status" th:value="${data.dataValue}"
+                           th:field="*{status}">
+                    <label th:for="${data.dataId}" th:text="${data.dataLabel}"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="col-sm-8">
+                <textarea id="remark" name="remark" class="form-control">[[*{remark}]]</textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<script type="text/javascript">
+    var prefix = ctx + "sysDictType";
+
+    $("#form1").validate({
+        rules: {
+            typeName: {
+                required: true,
+            },
+            typeCode: {
+                required: true,
+                minlength: 5,
+                remote: {
+                    url: prefix + "/checkExistSysDictType",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        typeId: function () {
+                            return $("#typeId").val();
+                        },
+                        typeCode: function () {
+                            return $.common.trim($("#typeCode").val());
+                        }
+                    },
+                    dataFilter: function (data, type) {
+                        return data != "true";
+                    }
+                }
+            },
+        },
+        messages: {
+            "typeCode": {
+                remote: "该字典类型已经存在"
+            }
+        }
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form1').serialize());
+        }
+    }
+</script>
+</body>
+</html>

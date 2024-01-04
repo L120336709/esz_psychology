@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('用户课程学习表列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>区域：</label>
+                            <select name="state">
+                                <option value="">选择区域</option>
+                                <option value="恩施州">恩施州</option>
+                                <option value="恩施市">恩施市</option>
+                                <option value="利川市">利川市</option>
+                                <option value="建始县">建始县</option>
+                                <option value="巴东县">巴东县</option>
+                                <option value="宣恩县">宣恩县</option>
+                                <option value="咸丰县">咸丰县</option>
+                                <option value="来凤县">来凤县</option>
+                                <option value="鹤峰县">鹤峰县</option>
+
+                            </select>
+                        </li>
+                        <li>
+                            <label>单位：</label>
+                            <input type="text" name="allClasshour"/>
+                        </li>
+                        <li>
+                            <label>姓名：</label>
+                            <input type="text" name="kcName"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <!--                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="psychology:userstudy:add">-->
+            <!--                    <i class="fa fa-plus"></i> 添加-->
+            <!--                </a>-->
+            <!--                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="psychology:userstudy:edit">-->
+            <!--                    <i class="fa fa-edit"></i> 修改-->
+            <!--                </a>-->
+            <!--                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="psychology:userstudy:remove">-->
+            <!--                    <i class="fa fa-remove"></i> 删除-->
+            <!--                </a>-->
+            <a class="btn btn-warning" onclick="$.table.exportExcel()">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('psychology:userstudy:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('psychology:userstudy:remove')}]];
+    var prefix = ctx + "psychology/userstudy";
+
+    $(function () {
+        var options = {
+            url: prefix + "/groupByPeoList",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "用户课程学习表",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'id',
+                    title: '',
+                    visible: false
+                },
+                {
+                    field: 'userId',
+                    title: '用户id',
+                    visible: false
+                },
+                // {
+                //     field: 'kcId',
+                //     title: '课程id'
+                // },
+                {
+                    field: 'state',
+                    title: '区域',
+                    sortable: true
+                },
+                {
+                    field: 'allClasshour',
+                    title: '单位',
+                    sortable: true
+                },
+                {
+                    field: 'kcName',
+                    title: '姓名',
+                    sortable: true
+                },
+
+                {
+                    field: 'getHour',
+                    title: '学习时长(分钟)',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        var min=Math.ceil(value/60);
+                        actions.push(min);
+                        return actions.join('');
+                    },
+                    sortable: true
+                },
+                {
+                    field: 'getClasshour',
+                    title: '学习课时(个)',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push(Math.ceil(value));
+                        return actions.join('');
+                    }
+                },
+                {
+                    field: 'done',
+                    title: '完成课程(门)',
+                    sortable: true,
+
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push(Math.ceil(value));
+                        return actions.join('');
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs" onclick="toXq(\'' + row.userId + '\')"><i class="fa fa-edit"></i>查看详情</a> ');
+                         return actions.join('');
+                    }
+                }
+            ]
+        };
+        $.table.init(options);
+    });
+</script>
+<script>
+    function toXq(userId) {
+        window.open("/psychology/xxjd?userId="+userId,"_blank")
+    }
+</script>
+</body>
+</html>

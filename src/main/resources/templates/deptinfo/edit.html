@@ -1,0 +1,178 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('修改')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal" id="form1" th:object="${deptinfo}" autocomplete="off">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+            <div class="form-group">	
+                <label class="col-sm-3 control-label">部门ID：</label>
+                <div class="col-sm-8">
+                    <input id="deptid" name="deptid" th:field="*{deptid}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">	
+                <label class="col-sm-3 control-label">部门名称：</label>
+                <div class="col-sm-8">
+                    <input id="deptname" name="deptname" th:field="*{deptname}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">	
+                <label class="col-sm-3 control-label">排序序号：</label>
+                <div class="col-sm-8">
+                    <input id="sort" name="sort" th:field="*{sort}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">	
+                <label class="col-sm-3 control-label">上级部门ID：</label>
+                <div class="col-sm-8">
+                    <input id="parentid" name="parentid" th:field="*{parentid}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">	
+                <label class="col-sm-3 control-label">所属机构（教育局或学校） Id：</label>
+                <div class="col-sm-8">
+                    <input id="orgid" name="orgid" th:field="*{orgid}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">	
+                <label class="col-sm-3 control-label">部门负责人：</label>
+                <div class="col-sm-8">
+                    <input id="leader" name="leader" th:field="*{leader}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">	
+                <label class="col-sm-3 control-label">联系电话：</label>
+                <div class="col-sm-8">
+                    <input id="phone" name="phone" th:field="*{phone}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">	
+                <label class="col-sm-3 control-label">邮箱：</label>
+                <div class="col-sm-8">
+                    <input id="email" name="email" th:field="*{email}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">	
+                <label class="col-sm-3 control-label">部门状态， 1 表示正常 0 表示已禁用：</label>
+                <div class="col-sm-8">
+                    <input id="status" name="status" th:field="*{status}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">	
+                <label class="col-sm-3 control-label">0 : 正常 1 : 删除：</label>
+                <div class="col-sm-8">
+                    <input id="isdelete" name="isdelete" th:field="*{isdelete}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">	
+                <label class="col-sm-3 control-label">创建时间：</label>
+                <div class="col-sm-8">
+                    <input id="createtime" name="createtime" th:field="*{createtime}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">	
+                <label class="col-sm-3 control-label">修改时间：</label>
+                <div class="col-sm-8">
+                    <input id="updatetime" name="updatetime" th:field="*{updatetime}" class="form-control" type="text">
+                </div>
+            </div>
+			
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "deptinfo";
+
+        var icon = "<i class='fa fa-times-circle'></i> ";
+		$("#form1").validate({
+            rules:{
+					deptid:{
+                    required:true,
+                },
+					deptname:{
+                    required:true,
+                },
+					sort:{
+                    required:true,
+                },
+					parentid:{
+                    required:true,
+                },
+					orgid:{
+                    required:true,
+                },
+					leader:{
+                    required:true,
+                },
+					phone:{
+                    required:true,
+                },
+					email:{
+                    required:true,
+                },
+					status:{
+                    required:true,
+                },
+					isdelete:{
+                    required:true,
+                },
+					createtime:{
+                    required:true,
+                },
+					updatetime:{
+                    required:true,
+                },
+        },
+        messages: {
+					deptid: {
+                    required: icon + "请输入部门ID",
+                },
+					deptname: {
+                    required: icon + "请输入部门名称",
+                },
+					sort: {
+                    required: icon + "请输入排序序号",
+                },
+					parentid: {
+                    required: icon + "请输入上级部门ID",
+                },
+					orgid: {
+                    required: icon + "请输入所属机构（教育局或学校） Id",
+                },
+					leader: {
+                    required: icon + "请输入部门负责人",
+                },
+					phone: {
+                    required: icon + "请输入联系电话",
+                },
+					email: {
+                    required: icon + "请输入邮箱",
+                },
+					status: {
+                    required: icon + "请输入部门状态， 1 表示正常 0 表示已禁用",
+                },
+					isdelete: {
+                    required: icon + "请输入0 : 正常 1 : 删除",
+                },
+					createtime: {
+                    required: icon + "请输入创建时间",
+                },
+					updatetime: {
+                    required: icon + "请输入修改时间",
+                },
+        }
+		});
+		
+		
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form1').serialize());
+        }
+    }
+		
+	</script>
+</body>
+</html>

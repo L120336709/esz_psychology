@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.SapientialMapper">
+
+    <resultMap type="Sapiential" id="SapientialResult">
+        <result property="id"    column="id"    />
+        <result property="examineename"    column="examineename"    />
+        <result property="idnumber"    column="idnumber"    />
+        <result property="examregistrationnumber"    column="examregistrationnumber"    />
+        <result property="examtime"    column="examtime"    />
+        <result property="delegationexploratorymission"    column="delegationexploratorymission"    />
+        <result property="thetestcode"    column="thetestcode"    />
+        <result property="theexaminationsitename"    column="theexaminationsitename"    />
+        <result property="theexaminationsiteaddress"    column="theexaminationsiteaddress"    />
+        <result property="building"    column="building"    />
+        <result property="floorlevel"    column="floorlevel"    />
+        <result property="theclassroomno"    column="theclassroomno"    />
+        <result property="seatnumber"    column="seatnumber"    />
+    </resultMap>
+
+    <sql id="selectSapientialVo">
+        select id, examineename, idnumber, examregistrationnumber, examtime, delegationexploratorymission, thetestcode, theexaminationsitename, theexaminationsiteaddress, building, floorlevel, theclassroomno, seatnumber from sapiential
+    </sql>
+
+    <select id="selectSapientialList" parameterType="Sapiential" resultMap="SapientialResult">
+        <include refid="selectSapientialVo"/>
+        <where>
+            <if test="examineename != null  and examineename != ''"> and examineename like concat('%', #{examineename}, '%')</if>
+            <if test="idnumber != null  and idnumber != ''"> and idnumber = #{idnumber}</if>
+            <if test="examregistrationnumber != null  and examregistrationnumber != ''"> and examregistrationnumber = #{examregistrationnumber}</if>
+            <if test="examtime != null  and examtime != ''"> and examtime = #{examtime}</if>
+            <if test="delegationexploratorymission != null  and delegationexploratorymission != ''"> and delegationexploratorymission = #{delegationexploratorymission}</if>
+            <if test="thetestcode != null  and thetestcode != ''"> and thetestcode = #{thetestcode}</if>
+            <if test="theexaminationsitename != null  and theexaminationsitename != ''"> and theexaminationsitename like concat('%', #{theexaminationsitename}, '%')</if>
+            <if test="theexaminationsiteaddress != null  and theexaminationsiteaddress != ''"> and theexaminationsiteaddress = #{theexaminationsiteaddress}</if>
+            <if test="building != null  and building != ''"> and building = #{building}</if>
+            <if test="floorlevel != null  and floorlevel != ''"> and floorlevel = #{floorlevel}</if>
+            <if test="theclassroomno != null  and theclassroomno != ''"> and theclassroomno = #{theclassroomno}</if>
+            <if test="seatnumber != null  and seatnumber != ''"> and seatnumber = #{seatnumber}</if>
+        </where>
+    </select>
+
+    <select id="selectSapientialById" parameterType="Long" resultMap="SapientialResult">
+        <include refid="selectSapientialVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSapiential" parameterType="Sapiential" useGeneratedKeys="true" keyProperty="id">
+        insert into sapiential
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="examineename != null">examineename,</if>
+            <if test="idnumber != null">idnumber,</if>
+            <if test="examregistrationnumber != null">examregistrationnumber,</if>
+            <if test="examtime != null">examtime,</if>
+            <if test="delegationexploratorymission != null">delegationexploratorymission,</if>
+            <if test="thetestcode != null">thetestcode,</if>
+            <if test="theexaminationsitename != null">theexaminationsitename,</if>
+            <if test="theexaminationsiteaddress != null">theexaminationsiteaddress,</if>
+            <if test="building != null">building,</if>
+            <if test="floorlevel != null">floorlevel,</if>
+            <if test="theclassroomno != null">theclassroomno,</if>
+            <if test="seatnumber != null">seatnumber,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="examineename != null">#{examineename},</if>
+            <if test="idnumber != null">#{idnumber},</if>
+            <if test="examregistrationnumber != null">#{examregistrationnumber},</if>
+            <if test="examtime != null">#{examtime},</if>
+            <if test="delegationexploratorymission != null">#{delegationexploratorymission},</if>
+            <if test="thetestcode != null">#{thetestcode},</if>
+            <if test="theexaminationsitename != null">#{theexaminationsitename},</if>
+            <if test="theexaminationsiteaddress != null">#{theexaminationsiteaddress},</if>
+            <if test="building != null">#{building},</if>
+            <if test="floorlevel != null">#{floorlevel},</if>
+            <if test="theclassroomno != null">#{theclassroomno},</if>
+            <if test="seatnumber != null">#{seatnumber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSapiential" parameterType="Sapiential">
+        update sapiential
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="examineename != null">examineename = #{examineename},</if>
+            <if test="idnumber != null">idnumber = #{idnumber},</if>
+            <if test="examregistrationnumber != null">examregistrationnumber = #{examregistrationnumber},</if>
+            <if test="examtime != null">examtime = #{examtime},</if>
+            <if test="delegationexploratorymission != null">delegationexploratorymission = #{delegationexploratorymission},</if>
+            <if test="thetestcode != null">thetestcode = #{thetestcode},</if>
+            <if test="theexaminationsitename != null">theexaminationsitename = #{theexaminationsitename},</if>
+            <if test="theexaminationsiteaddress != null">theexaminationsiteaddress = #{theexaminationsiteaddress},</if>
+            <if test="building != null">building = #{building},</if>
+            <if test="floorlevel != null">floorlevel = #{floorlevel},</if>
+            <if test="theclassroomno != null">theclassroomno = #{theclassroomno},</if>
+            <if test="seatnumber != null">seatnumber = #{seatnumber},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSapientialById" parameterType="Long">
+        delete from sapiential where id = #{id}
+    </delete>
+
+    <delete id="deleteSapientialByIds" parameterType="String">
+        delete from sapiential where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

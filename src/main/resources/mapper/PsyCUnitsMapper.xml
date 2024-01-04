@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.PsyCUnitsMapper">
+    
+    <resultMap type="PsyCUnits" id="PsyCUnitsResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="position"    column="position"    />
+        <result property="contentType"    column="contentType"    />
+        <result property="contentUrl"    column="contentUrl"    />
+        <result property="videoSignId"    column="videoSignId"    />
+        <result property="gmtModified"    column="gmtModified"    />
+        <result property="createTime"    column="createTime"    />
+        <result property="updateTime"    column="updateTime"    />
+        <result property="lessonsId"    column="lessonsId"    />
+    </resultMap>
+
+    <sql id="selectPsyCUnitsVo">
+        select id, name, position, contentType, contentUrl, videoSignId, gmtModified, createTime, updateTime,lessonsId from psy_c_units
+    </sql>
+
+    <select id="selectPsyCUnitsList" parameterType="PsyCUnits" resultMap="PsyCUnitsResult">
+        <include refid="selectPsyCUnitsVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="position != null "> and position = #{position}</if>
+            <if test="contentType != null "> and contentType = #{contentType}</if>
+            <if test="contentUrl != null  and contentUrl != ''"> and contentUrl = #{contentUrl}</if>
+            <if test="videoSignId != null "> and videoSignId = #{videoSignId}</if>
+            <if test="gmtModified != null "> and gmtModified = #{gmtModified}</if>
+            <if test="createTime != null "> and createTime = #{createTime}</if>
+            <if test="updateTime != null "> and updateTime = #{updateTime}</if>
+            <if test="lessonsId != null "> and lessonsId = #{lessonsId}</if>
+
+        </where>
+    </select>
+    
+    <select id="selectPsyCUnitsById" parameterType="Long" resultMap="PsyCUnitsResult">
+        <include refid="selectPsyCUnitsVo"/>
+        where id = #{id}
+    </select>
+
+    <!--批量查找数据 -->
+    <select id="selectPsyCUnitsListBylessonsId" parameterType="java.util.ArrayList" resultMap="PsyCUnitsResult">
+        <include refid="selectPsyCUnitsVo"/>
+        <where>
+            lessonsId in (
+            <foreach collection="list" item="lessonsId" index="index" separator=",">
+                #{lessonsId}
+            </foreach>
+            )
+        </where>
+    </select>
+    <!--批量查找数据 -->
+    <select id="selectPsyCUnitsListByIds" parameterType="java.util.ArrayList" resultMap="PsyCUnitsResult">
+        <include refid="selectPsyCUnitsVo"/>
+        <where>
+            id in (
+            <foreach collection="list" item="id" index="index" separator=",">
+                #{id}
+            </foreach>
+            )
+        </where>
+    </select>
+
+    <!--批量插入数据 -->
+    <insert id="insertPsyCUnitsList">
+        insert into psy_c_units (id, name, position, contentType, contentUrl, videoSignId,gmtModified, createTime, updateTime,lessonsId )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.name},#{item.position},#{item.contentType},
+            #{item.contentUrl},#{item.videoSignId},#{item.gmtModified},#{item.createTime},#{item.updateTime},#{item.lessonsId})
+        </foreach>
+    </insert>
+
+    <!--批量更新数据 -->
+    <update id="updatePsyCUnitsList" parameterType="java.util.List">
+        update psy_c_units set
+        name =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.name,jdbcType=VARCHAR}
+        </foreach>
+        ,position =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.position,jdbcType=VARCHAR}
+        </foreach>
+
+        ,contentType =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.contentType,jdbcType=VARCHAR}
+        </foreach>
+        ,contentUrl =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.contentUrl,jdbcType=VARCHAR}
+        </foreach>
+        ,videoSignId =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.videoSignId,jdbcType=VARCHAR}
+        </foreach>
+        ,gmtModified =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.gmtModified,jdbcType=VARCHAR}
+        </foreach>
+        ,createTime =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.createTime,jdbcType=VARCHAR}
+        </foreach>
+        ,updateTime =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.updateTime,jdbcType=VARCHAR}
+        </foreach>
+        ,lessonsId =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id,jdbcType=DECIMAL} then #{item.lessonsId,jdbcType=VARCHAR}
+        </foreach>
+
+        where id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=DECIMAL}
+        </foreach>
+    </update>
+        
+    <insert id="insertPsyCUnits" parameterType="PsyCUnits">
+        insert into psy_c_units
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="position != null">position,</if>
+            <if test="contentType != null">contentType,</if>
+            <if test="contentUrl != null">contentUrl,</if>
+            <if test="videoSignId != null">videoSignId,</if>
+            <if test="gmtModified != null">gmtModified,</if>
+            <if test="createTime != null">createTime,</if>
+            <if test="updateTime != null">updateTime,</if>
+            <if test="lessonsId != null">lessonsId,</if>
+
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="position != null">#{position},</if>
+            <if test="contentType != null">#{contentType},</if>
+            <if test="contentUrl != null">#{contentUrl},</if>
+            <if test="videoSignId != null">#{videoSignId},</if>
+            <if test="gmtModified != null">#{gmtModified},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="lessonsId != null">#{lessonsId},</if>
+
+         </trim>
+    </insert>
+
+    <update id="updatePsyCUnits" parameterType="PsyCUnits">
+        update psy_c_units
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="contentType != null">contentType = #{contentType},</if>
+            <if test="contentUrl != null">contentUrl = #{contentUrl},</if>
+            <if test="videoSignId != null">videoSignId = #{videoSignId},</if>
+            <if test="gmtModified != null">gmtModified = #{gmtModified},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="lessonsId != null">lessonsId = #{lessonsId},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyCUnitsById" parameterType="Long">
+        delete from psy_c_units where id = #{id}
+    </delete>
+
+    <delete id="deletePsyCUnitsByIds" parameterType="String">
+        delete from psy_c_units where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.PsyCVideosignMapper">
+
+    <resultMap type="PsyCVideosign" id="PsyCVideosignResult">
+        <result property="videoId" column="videoId"/>
+        <result property="name" column="name"/>
+        <result property="status" column="status"/>
+        <result property="duration" column="duration"/>
+        <result property="videoImgUrl" column="videoImgUrl"/>
+        <result property="signature" column="signature"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="unitsId" column="unitsId"/>
+    </resultMap>
+
+    <sql id="selectPsyCVideosignVo">
+        select videoId, name, status, duration, videoImgUrl, signature, createTime, updateTime,unitsId from psy_c_videosign
+    </sql>
+
+    <select id="selectPsyCVideosignList" parameterType="PsyCVideosign" resultMap="PsyCVideosignResult">
+        <include refid="selectPsyCVideosignVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="duration != null ">and duration = #{duration}</if>
+            <if test="videoImgUrl != null  and videoImgUrl != ''">and videoImgUrl = #{videoImgUrl}</if>
+            <if test="signature != null  and signature != ''">and signature = #{signature}</if>
+            <if test="createTime != null ">and createTime = #{createTime}</if>
+            <if test="updateTime != null ">and updateTime = #{updateTime}</if>
+            <if test="unitsId != null ">and unitsId = #{unitsId}</if>
+
+        </where>
+    </select>
+
+
+
+    <select id="selectPsyCVideosignByVideoId" parameterType="Long" resultMap="PsyCVideosignResult">
+        <include refid="selectPsyCVideosignVo"/>
+        where videoId = #{videoId}
+    </select>
+
+
+    <!--批量查找数据 -->
+    <select id="selectPsyCVideosignListByunitsId" parameterType="java.util.ArrayList" resultMap="PsyCVideosignResult">
+        <include refid="selectPsyCVideosignVo"/>
+        <where>
+            unitsId in (
+            <foreach collection="list" item="unitsId" index="index" separator=",">
+                #{unitsId}
+            </foreach>
+            )
+        </where>
+    </select>
+    <!--批量查找数据 -->
+    <select id="selectPsyCVideosignListByIds" parameterType="java.util.ArrayList" resultMap="PsyCVideosignResult">
+        <include refid="selectPsyCVideosignVo"/>
+        <where>
+            videoId in (
+            <foreach collection="list" item="videoId" index="index" separator=",">
+                #{videoId}
+            </foreach>
+            )
+        </where>
+    </select>
+
+    <!--批量插入数据 -->
+    <insert id="insertPsyCVideosignList">
+        insert into psy_c_videosign (videoId, name, status, duration, videoImgUrl, signature, createTime,updateTime,unitsId)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.videoId},#{item.name},#{item.status},#{item.duration},
+            #{item.videoImgUrl},#{item.signature},#{item.createTime},#{item.updateTime},#{item.unitsId})
+        </foreach>
+    </insert>
+
+    <!--批量更新数据 -->
+    <update id="updatePsyCVideosignList" parameterType="java.util.List">
+        update psy_c_videosign set
+        name =
+        <foreach collection="list" item="item" index="index" separator=" " open="case videoId" close="end">
+            when #{item.videoId,jdbcType=DECIMAL} then #{item.name,jdbcType=VARCHAR}
+        </foreach>
+        ,status =
+        <foreach collection="list" item="item" index="index" separator=" " open="case videoId" close="end">
+            when #{item.videoId,jdbcType=DECIMAL} then #{item.status,jdbcType=VARCHAR}
+        </foreach>
+        ,duration =
+        <foreach collection="list" item="item" index="index" separator=" " open="case videoId" close="end">
+            when #{item.videoId,jdbcType=DECIMAL} then #{item.duration,jdbcType=VARCHAR}
+        </foreach>
+        ,videoImgUrl =
+        <foreach collection="list" item="item" index="index" separator=" " open="case videoId" close="end">
+            when #{item.videoId,jdbcType=DECIMAL} then #{item.videoImgUrl,jdbcType=VARCHAR}
+        </foreach>
+        ,signature =
+        <foreach collection="list" item="item" index="index" separator=" " open="case videoId" close="end">
+            when #{item.videoId,jdbcType=DECIMAL} then #{item.signature,jdbcType=VARCHAR}
+        </foreach>
+        ,createTime =
+        <foreach collection="list" item="item" index="index" separator=" " open="case videoId" close="end">
+            when #{item.videoId,jdbcType=DECIMAL} then #{item.createTime,jdbcType=VARCHAR}
+        </foreach>
+        ,updateTime =
+        <foreach collection="list" item="item" index="index" separator=" " open="case videoId" close="end">
+            when #{item.videoId,jdbcType=DECIMAL} then #{item.updateTime,jdbcType=VARCHAR}
+        </foreach>
+        ,unitsId =
+        <foreach collection="list" item="item" index="index" separator=" " open="case videoId" close="end">
+            when #{item.videoId,jdbcType=DECIMAL} then #{item.unitsId,jdbcType=VARCHAR}
+        </foreach>
+
+
+        where videoId in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.videoId,jdbcType=DECIMAL}
+        </foreach>
+    </update>
+
+    <insert id="insertPsyCVideosign" parameterType="PsyCVideosign">
+        insert into psy_c_videosign
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="videoId != null">videoId,</if>
+            <if test="name != null">name,</if>
+            <if test="status != null">status,</if>
+            <if test="duration != null">duration,</if>
+            <if test="videoImgUrl != null">videoImgUrl,</if>
+            <if test="signature != null">signature,</if>
+            <if test="createTime != null">createTime,</if>
+            <if test="updateTime != null">updateTime,</if>
+            <if test="unitsId != null">unitsId,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="videoId != null">#{videoId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="status != null">#{status},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="videoImgUrl != null">#{videoImgUrl},</if>
+            <if test="signature != null">#{signature},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="unitsId != null">#{unitsId},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePsyCVideosign" parameterType="PsyCVideosign">
+        update psy_c_videosign
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="videoImgUrl != null">videoImgUrl = #{videoImgUrl},</if>
+            <if test="signature != null">signature = #{signature},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="unitsId != null">unitsId = #{unitsId},</if>
+
+        </trim>
+        where videoId = #{videoId}
+    </update>
+
+    <delete id="deletePsyCVideosignByVideoId" parameterType="Long">
+        delete from psy_c_videosign where videoId = #{videoId}
+    </delete>
+
+    <delete id="deletePsyCVideosignByVideoIds" parameterType="String">
+        delete from psy_c_videosign where videoId in
+        <foreach item="videoId" collection="array" open="(" separator="," close=")">
+            #{videoId}
+        </foreach>
+    </delete>
+
+</mapper>

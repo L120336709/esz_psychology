@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.SysRoleDao">
+
+    <resultMap type="com.sundata.edu.domain.SysRole" id="BaseResultMap">
+        <result property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="system" column="system"/>
+        <result property="status" column="status"/>
+        <result property="orgId" column="org_id" />
+        <result property="userId" column="user_id" />
+        <result property="created" column="created"/>
+        <result property="updated" column="updated"/>
+        <result property="remark" column="remark"/>
+        <result property="level" column="level"/>
+    </resultMap>
+
+
+    <select id="getRoleList" parameterType="com.sundata.edu.vo.SysRoleVo"
+            resultType="com.sundata.edu.domain.SysRole">
+        SELECT * FROM sys_role r
+        <where>
+            <if test="roleName != null and roleName != ''">
+                AND r.role_name like concat('%', #{roleName}, '%')
+            </if>
+            <if test='orgId != null and orgId != "" and (params==null or params.hasAdmin != "1")'>
+                AND r.org_id = #{orgId}
+            </if>
+            <if test='params!=null and params.hasAdmin =="1"'>
+                AND (r.org_id = #{orgId} or r.org_id = '')
+            </if>
+            <if test="status != null">
+                AND r.status = #{status}
+            </if>
+            <if test="roleCode != null and roleCode != ''">
+                AND r.role_code like concat('%', #{roleCode}, '%')
+            </if>
+
+            <if test="params!=null and params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(r.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params!=null and params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(r.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+
+    </select>
+
+    <select id="getRolesByUserId" resultType="com.sundata.edu.domain.SysRole">
+        SELECT sr.* FROM sys_user_role sur join sys_role sr on sur.role_id=sr.role_id and sr.status=1 WHERE sur.user_id=#{userId}
+    </select>
+
+    <select id="getRoleListByLevel" resultType="com.sundata.edu.domain.SysRole">
+        select sr.* from sys_role sr where sr.level>=#{minLevel}  order by sr.level
+    </select>
+
+</mapper>

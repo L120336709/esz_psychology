@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.PsyUserjdMapper">
+    
+    <resultMap type="PsyUserjd" id="PsyUserjdResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="kcId"    column="kc_id"    />
+        <result property="chapterId"    column="chapter_id"    />
+        <result property="lessonsId"    column="lessons_id"    />
+        <result property="unitsId"    column="units_id"    />
+        <result property="videoId"    column="video_id"    />
+        <result property="timlong"    column="timlong"    />
+        <result property="done"    column="done"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="doneTime"    column="done_time"    />
+    </resultMap>
+
+    <sql id="selectPsyUserjdVo">
+        select id, user_id, kc_id, chapter_id, lessons_id, units_id, video_id, timlong, done, create_time, done_time from psy_userjd
+    </sql>
+
+    <select id="selectPsyUserjdList" parameterType="PsyUserjd" resultMap="PsyUserjdResult">
+        <include refid="selectPsyUserjdVo"/>
+        <where>  
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="kcId != null "> and kc_id = #{kcId}</if>
+            <if test="chapterId != null "> and chapter_id = #{chapterId}</if>
+            <if test="lessonsId != null "> and lessons_id = #{lessonsId}</if>
+            <if test="unitsId != null "> and units_id = #{unitsId}</if>
+            <if test="videoId != null "> and video_id = #{videoId}</if>
+            <if test="timlong != null "> and timlong = #{timlong}</if>
+            <if test="done != null  and done != ''"> and done = #{done}</if>
+            <if test="doneTime != null "> and done_time = #{doneTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyUserjdById" parameterType="Long" resultMap="PsyUserjdResult">
+        <include refid="selectPsyUserjdVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyUserjd" parameterType="PsyUserjd" useGeneratedKeys="true" keyProperty="id">
+        insert into psy_userjd
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="kcId != null">kc_id,</if>
+            <if test="chapterId != null">chapter_id,</if>
+            <if test="lessonsId != null">lessons_id,</if>
+            <if test="unitsId != null">units_id,</if>
+            <if test="videoId != null">video_id,</if>
+            <if test="timlong != null">timlong,</if>
+            <if test="done != null">done,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="doneTime != null">done_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="kcId != null">#{kcId},</if>
+            <if test="chapterId != null">#{chapterId},</if>
+            <if test="lessonsId != null">#{lessonsId},</if>
+            <if test="unitsId != null">#{unitsId},</if>
+            <if test="videoId != null">#{videoId},</if>
+            <if test="timlong != null">#{timlong},</if>
+            <if test="done != null">#{done},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="doneTime != null">#{doneTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyUserjd" parameterType="PsyUserjd">
+        update psy_userjd
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="kcId != null">kc_id = #{kcId},</if>
+            <if test="chapterId != null">chapter_id = #{chapterId},</if>
+            <if test="lessonsId != null">lessons_id = #{lessonsId},</if>
+            <if test="unitsId != null">units_id = #{unitsId},</if>
+            <if test="videoId != null">video_id = #{videoId},</if>
+            <if test="timlong != null">timlong = #{timlong},</if>
+            <if test="done != null">done = #{done},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="doneTime != null">done_time = #{doneTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyUserjdById" parameterType="Long">
+        delete from psy_userjd where id = #{id}
+    </delete>
+
+    <delete id="deletePsyUserjdByIds" parameterType="String">
+        delete from psy_userjd where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

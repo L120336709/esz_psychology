@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>错误提示</title>
+</head>
+<body>
+<!--<h3>请在平台登录</h3>-->
+</body>
+<th:block th:include="include :: footer"/>
+<script language="javascript" type="text/javascript">
+
+    //var loginUrl = "http://www.jianshijy.cn/";
+        var loginUrl = "http://www.eszedu.com/";
+    if (window != top) {
+        top.location.href = loginUrl;
+    } else {
+        window.location.href = loginUrl;
+    }
+
+
+</script>
+</html>

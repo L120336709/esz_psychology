@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('新增')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal" id="form1" autocomplete="off">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">考生姓名：</label>
+				<div class="col-sm-8">
+					<input id="examineename" name="examineename" class="form-control" type="text" autocomplete="off">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">身份证号：</label>
+				<div class="col-sm-8">
+					<input id="idnumber" name="idnumber" class="form-control" type="text" autocomplete="off">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">准考证号：</label>
+				<div class="col-sm-8">
+					<input id="examregistrationnumber" name="examregistrationnumber" class="form-control" type="text" autocomplete="off">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">考试时间：</label>
+				<div class="col-sm-8">
+					<input id="examtime" name="examtime" class="form-control" type="text" autocomplete="off">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">考场号：</label>
+				<div class="col-sm-8">
+					<input id="delegationexploratorymission" name="delegationexploratorymission" class="form-control" type="text" autocomplete="off">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">考点代码：</label>
+				<div class="col-sm-8">
+					<input id="thetestcode" name="thetestcode" class="form-control" type="text" autocomplete="off">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">考点名称：</label>
+				<div class="col-sm-8">
+					<input id="theexaminationsitename" name="theexaminationsitename" class="form-control" type="text" autocomplete="off">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">考点地址：</label>
+				<div class="col-sm-8">
+					<input id="theexaminationsiteaddress" name="theexaminationsiteaddress" class="form-control" type="text" autocomplete="off">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">楼栋：</label>
+				<div class="col-sm-8">
+					<input id="building" name="building" class="form-control" type="text" autocomplete="off">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">楼层：</label>
+				<div class="col-sm-8">
+					<input id="floorlevel" name="floorlevel" class="form-control" type="text" autocomplete="off">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">教室号：</label>
+				<div class="col-sm-8">
+					<input id="theclassroomno" name="theclassroomno" class="form-control" type="text" autocomplete="off">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">座位号：</label>
+				<div class="col-sm-8">
+					<input id="seatnumber" name="seatnumber" class="form-control" type="text" autocomplete="off">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "sapiential";
+
+        var icon = "<i class='fa fa-times-circle'></i> ";
+        /* validate
+        页面加载后对表单进行验证 $("#表单id名").validate({}）
+        在validate中的rules中编写验证规则（格式如下）
+        字段的name属性:“校验器”（tisps:一个输入框只有一个校验器的时候使用）
+        字段的name属性:{校验器:值,校验器:值}(tips:输入框需要有多个校验器的时候使用)
+        在validate中的messages中编写提示信息(tips格式与rules相对应)
+         在validate中的submitHandler中编写验证通过执行的内容
+
+        * */
+		$("#form1").validate({
+			rules:{
+				examineename:{
+					required:true,
+				},
+				idnumber:{
+					required:true,
+				},
+				examregistrationnumber:{
+					required:true,
+				},
+				examtime:{
+					required:true,
+				},
+				delegationexploratorymission:{
+					required:true,
+				},
+				thetestcode:{
+					required:true,
+				},
+				theexaminationsitename:{
+					required:true,
+				},
+				theexaminationsiteaddress:{
+					required:true,
+				},
+				building:{
+					required:true,
+				},
+				floorlevel:{
+					required:true,
+				},
+				theclassroomno:{
+					required:true,
+				},
+				seatnumber:{
+					required:true,
+				},
+			},
+        	messages: {
+				examineename: {
+					required: icon + "请输入考生姓名",
+				},
+				idnumber: {
+					required: icon + "请输入身份证号",
+				},
+				examregistrationnumber: {
+					required: icon + "请输入准考证号",
+				},
+				examtime: {
+					required: icon + "请输入考试时间",
+				},
+				delegationexploratorymission: {
+					required: icon + "请输入考场号",
+				},
+				thetestcode: {
+					required: icon + "请输入考点代码",
+				},
+				theexaminationsitename: {
+					required: icon + "请输入考点名称",
+				},
+				theexaminationsiteaddress: {
+					required: icon + "请输入考点地址",
+				},
+				building: {
+					required: icon + "请输入楼栋",
+				},
+				floorlevel: {
+					required: icon + "请输入楼层",
+				},
+				theclassroomno: {
+					required: icon + "请输入教室号",
+				},
+				seatnumber: {
+					required: icon + "请输入座位号",
+				},
+        	}
+		});
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form1').serialize());
+        }
+    }
+	</script>
+</body>
+</html>

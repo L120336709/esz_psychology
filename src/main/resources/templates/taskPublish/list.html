@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('列表')" />
+</head>
+<body class="gray-bg">
+    <div class="container-div">
+	<div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="form1" autocomplete="off">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                             标题：<input type="text" name="title"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+							<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+		<div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="addPlan()" shiro:hasPermission="taskPublish:add">
+                <i class="fa fa-plus"></i> 新增
+            </a>
+        </div>
+			
+		<div class="col-sm-12 select-table table-striped">
+			<table id="bootstrap-table" data-mobile-responsive="true"></table>
+		</div>
+		</div>
+    </div>
+    <th:block th:include="include :: footer" />
+	<script th:inline="javascript">
+		var editFlag = [[${@permission.hasPermi('taskPublish:edit')}]];
+		var removeFlag = [[${@permission.hasPermi('taskPublish:remove')}]];
+        var prefix = ctx + "taskPublish";
+        var isAdd = true;
+		//columns中可以添加 align: 'center',width: '20%',sortable: true
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                search: false,
+                modalName: "采集时间",
+                columns: [
+                // {
+		        //     checkbox: true
+		        // },
+
+                    {
+                        field : 'title',
+                        title : '标题',
+                    },
+                    {
+					field : 'startTime',
+					title : '开始时间' ,
+                        formatter: function(value, row, index) {
+                            return $.common.formatDate(value,"yyyy-MM-dd");
+                        }
+				},
+				{
+					field : 'endTime',
+					title : '结束时间' ,
+                    formatter: function(value, row, index) {
+                        return $.common.formatDate(value,"yyyy-MM-dd");
+                    }
+				},
+                {
+                    field : 'status',
+                    title : '状态' ,
+                    formatter: function (value, row, index) {
+                        if(row.id==null){
+                            isAdd = true;
+                        }
+                        if(index==0){
+                            if(value!=0&&value!=1){
+                                isAdd = true;
+                            }else{
+                                isAdd = false;
+                            }
+                        }
+                        if (value == 0) {
+                            return '<span class="label label-warning">未开始</span>';
+                        } else if (value == 1) {
+                            return '<span class="label label-success">进行中</span>';
+                        } else {
+                            return '<span class="label label-danger">已结束</span>';
+                        }
+                    }
+                },
+				{
+					field : 'createTime',
+					title : '创建时间' ,
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+                    width: '120',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	if (row.status != 2) {
+                            actions.push("<a class=\"btn btn-success btn-xs " + editFlag + "\" href=\"#\" onclick=\"$.operate.edit('" + row.id + "')\"><i class=\"fa fa-edit\"></i>编辑</a> ");
+                            actions.push("<a class=\"btn btn-danger btn-xs " + removeFlag + "\" href=\"#\" onclick=\"$.operate.remove('" + row.id + "')\"><i class=\"fa fa-remove\"></i>删除</a>");
+                        }
+                        return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+
+        function addPlan() {
+            if(isAdd){
+                $.operate.add()
+            }else{
+                $.modal.msg("已经有进行中的任务哦");
+            }
+        }
+    </script>
+</body>
+</html>

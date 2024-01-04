@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <title>个人学习档案</title>
+    <link rel="stylesheet" href="/css/psy/psy.css?v=20231221"/>
+</head>
+<body>
+<div class="bac_01">
+    <div class="bac_01_01">
+        <a href="https://www.eszedu.com"><img src="/img/psy/logo1.png" alt=""> </a>
+        <div>2023年恩施州心理健康培训课程</div>
+    </div>
+    <div class="bac_01_02" id="title">
+        <div><a onclick="toIndex()">首页</a></div>
+        <div><a onclick="toPxsm()">培训说明</a></div>
+        <div class="bac_01_02_02"><a onclick="toXxjd()"> 学习档案</a></div>
+    </div>
+</div>
+<div th:text="${userId}" id="userId"></div>
+<div class="bac_02">
+    <div></div>
+</div>
+<div class="bac_03">
+    <div class="bac_03_01" style="min-height: auto" id="kclb">
+        <div class="bac_03_01_02" id="titlename"> 个人学习档案</div>
+        <div class="bac_03_01_03" id="titleMes">
+            <div>
+                尊敬的 <span id="realName"></span> 老师，今天是<span id="dataNow"></span>
+            </div>
+            <div>
+                您已累计参加心理健康线上培训学习 <span id="nums"></span> ，
+                累计学习时长 <span id="mins"></span> ，
+                学习课程 <span id="hours"></span> ，学习完成 <span id="classs"></span> 。
+            </div>
+            <div>
+                学习结论：
+                <span style="color: red">
+                    您尚未达到本次培训的学习要求，请继续努力！(
+                </span>
+                <span style="color: #3784E4">
+                   您已经达到本次培训的A/B/C级培训合格要求，请结合培训要求继续学习！）
+                </span>
+            </div>
+            <div class="bac_03_01_03_01">
+                注：课程学习进度需达到100%，并且测评正确率达到80%，方可视为完成该门课程的学习！
+            </div>
+        </div>
+        <div class="userstudy" id="userstudy">
+        </div>
+    </div>
+</div>
+<div class="copy_right" id="copy_right">
+</div>
+<th:block th:include="include :: footer"/>
+<script src="/js/psy/psy.js?v=2023122201"></script>
+<script>
+    getXxjd()
+</script>
+</body>
+</html>

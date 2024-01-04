@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.UserClassInfoDao">
+
+
+    <!-- 查询分配班级的老师 -->
+    <select id="selectUsersList" resultType="java.util.Map">
+             SELECT DISTINCT
+                (uc.user_id) AS teacherId,
+                ui.real_name AS teacherName,
+                FROM_UNIXTIME(uc.created, '%Y-%m-%d %H:%i:%s') AS created
+            FROM
+                user_classinfo uc,
+                userinfo ui
+            WHERE
+                1 = 1
+            AND uc.user_id = ui.user_id
+            AND ui.identity = '101'
+            <if test="teacherName != null and teacherName != ''">
+			   AND ui.real_name like concat('%',#{teacherName},'%')
+            </if>
+    </select>
+
+    <!-- 查询老师分配的班级 -->
+    <select id="getUsersClasses" resultType="java.util.Map" parameterType="java.util.Map">
+            SELECT
+                uc.grade_id AS gradeId,
+                ci.grade_name AS gradeName,
+                uc.class_id AS classId,
+                ci.class_name AS className
+            FROM
+                user_classinfo uc,
+                classinfo ci
+            WHERE
+                1 = 1
+            AND uc.class_id = ci.class_id
+            <if test="userId != null and userId != ''">
+                AND uc.user_id = #{userId}
+            </if>
+            order by uc.grade_id desc
+    </select>
+
+
+    <!-- 新增用户班级信息 -->
+    <insert id="addUserClassInfos" parameterType="com.sundata.edu.domain.UserClassInfo">
+        INSERT INTO user_classinfo(user_id, grade_id,class_id,created) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.teacherId},#{item.gradeId},#{item.classId},#{item.created})
+        </foreach>
+    </insert>
+
+    <!-- 根据老师id删除关联关系 -->
+    <delete id="deleteUserClassInfos" parameterType="java.util.Map">
+        DELETE FROM user_classinfo WHERE user_id = #{userId}
+    </delete>
+
+    <!-- 判断是否存在 -->
+    <select id="checkUserClassInfo" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM user_classinfo WHERE user_id = #{userId}
+    </select>
+
+    <!-- 根据用户id查询班级信息 -->
+    <select id="queryClassIdsByUserId" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT class_id as classId FROM user_classinfo WHERE user_id=#{userId}
+    </select>
+
+</mapper>

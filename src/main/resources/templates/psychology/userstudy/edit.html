@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改用户课程学习表')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-userstudy-edit" th:object="${psyUserstudy}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">用户id：</label>
+                <div class="col-sm-8">
+                    <input name="userId" th:field="*{userId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">课程id：</label>
+                <div class="col-sm-8">
+                    <input name="kcId" th:field="*{kcId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">课程名称：</label>
+                <div class="col-sm-8">
+                    <input name="kcName" th:field="*{kcName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">课程总学时：</label>
+                <div class="col-sm-8">
+                    <input name="allClasshour" th:field="*{allClasshour}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">已累计学习课时：</label>
+                <div class="col-sm-8">
+                    <input name="getClasshour" th:field="*{getClasshour}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">已累计学习时长：</label>
+                <div class="col-sm-8">
+                    <input name="getHour" th:field="*{getHour}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">学习进度百分比：</label>
+                <div class="col-sm-8">
+                    <input name="schedule" th:field="*{schedule}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">是否完成本课程的学习0/1：</label>
+                <div class="col-sm-8">
+                    <input name="done" th:field="*{done}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">：</label>
+                <div class="col-sm-8">
+                    <input name="state" th:field="*{state}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "psychology/userstudy";
+        $("#form-userstudy-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-userstudy-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.StudentinfoDao">
+
+    <resultMap type="com.sundata.edu.domain.Studentinfo" id="BaseResultMap">
+        <result property="userId" column="user_id" />
+        <result property="schoolcode" column="schoolCode" />
+        <result property="jobnumber" column="jobnumber" />
+        <result property="gradeCode" column="gradeCode" />
+        <result property="classCode" column="classCode" />
+        <result property="studentName" column="studentname" />
+        <result property="gender" column="gender" />
+        <result property="birthday" column="birthday" />
+        <result property="ativecode" column="ativeCode" />
+        <result property="nativeplace" column="nativePlace" />
+        <result property="nation" column="nation" />
+        <result property="nationality" column="nationality" />
+        <result property="idcardtype" column="idCardType" />
+        <result property="idcard" column="idCard" />
+        <result property="gat" column="gat" />
+        <result property="healthy" column="healthy" />
+        <result property="politytype" column="polityType" />
+        <result property="registeredresidence" column="registeredResidence" />
+        <result property="registeredresidencexzq" column="registeredResidenceXzq" />
+        <result property="xqh" column="xqh" />
+        <result property="bh" column="bh" />
+        <result property="lxnf" column="lxnf" />
+        <result property="rxfs" column="rxfs" />
+        <result property="jdfs" column="jdfs" />
+        <result property="address" column="address" />
+        <result property="postaladdress" column="postalAddress" />
+        <result property="homeaddress" column="homeAddress" />
+        <result property="mobile" column="mobile" />
+        <result property="postalcode" column="postalCode" />
+        <result property="onlychild" column="onlyChild" />
+        <result property="xqjy" column="xqjy" />
+        <result property="lset" column="lset" />
+        <result property="lscet" column="lscet" />
+        <result property="cjr" column="cjr" />
+        <result property="sqzz" column="sqzz" />
+        <result property="yb" column="yb" />
+        <result property="gr" column="gr" />
+        <result property="yfzn" column="yfzn" />
+        <result property="sqzn" column="sqzn" />
+        <result property="cwsqzn" column="cwsqzn" />
+        <result property="sxx" column="sxx" />
+        <result property="sxxfs" column="sxxfs" />
+        <result property="sfcwxc" column="sfcwxc" />
+        <result property="cym" column="cym" />
+        <result property="sfzyxq" column="sfzyxq" />
+        <result property="xx" column="xx" />
+        <result property="tc" column="tc" />
+        <result property="xjfh" column="xjfh" />
+        <result property="blxh" column="blxh" />
+        <result property="xsly" column="xsly" />
+        <result property="dzxx" column="dzxx" />
+        <result property="zydz" column="zydz" />
+        <result property="zfgmxw" column="zfgmxw" />
+        <result property="cyxm" column="cyxm" />
+        <result property="cygx" column="cygx" />
+        <result property="cygxsm" column="cygxsm" />
+        <result property="cyzz" column="cyzz" />
+        <result property="cyxzqh" column="cyxzqh" />
+        <result property="cydh" column="cydh" />
+        <result property="cyjhr" column="cyjhr" />
+        <result property="cysfzlx" column="cysfzlx" />
+        <result property="cysfzh" column="cysfzh" />
+        <result property="cymz" column="cymz" />
+        <result property="cygz" column="cygz" />
+        <result property="cyzw" column="cyzw" />
+        <result property="cyrxm" column="cyrxm" />
+        <result property="cyrgx" column="cyrgx" />
+        <result property="cyrgxsm" column="cyrgxsm" />
+        <result property="cyrzz" column="cyrzz" />
+        <result property="cyrxzq" column="cyrxzq" />
+        <result property="cyrdh" column="cyrdh" />
+        <result property="cyrjhr" column="cyrjhr" />
+        <result property="cyrsfzlx" column="cyrsfzlx" />
+        <result property="cyrzjh" column="cyrzjh" />
+        <result property="cyrmz" column="cyrmz" />
+        <result property="cyrgzdw" column="cyrgzdw" />
+        <result property="cyrzw" column="cyrzw" />
+    </resultMap>
+
+    <!--批量更新数据 -->
+    <update id="updateStudentinfoList" parameterType="java.util.List">
+        update studentinfo set
+        jobnumber =
+        <foreach collection="list" item="stu" index="index" separator=" " open="case user_id" close="end">
+            when #{stu.userId,jdbcType=DECIMAL} then #{stu.jobnumber,jdbcType=VARCHAR}
+        </foreach>
+        ,studentname =
+        <foreach collection="list" item="stu" index="index" separator=" " open="case user_id" close="end">
+            when #{stu.userId,jdbcType=DECIMAL} then #{stu.studentName,jdbcType=VARCHAR}
+        </foreach>
+        ,schoolCode =
+        <foreach collection="list" item="stu" index="index" separator=" " open="case user_id" close="end">
+            when #{stu.userId,jdbcType=DECIMAL} then #{stu.schoolcode,jdbcType=VARCHAR}
+        </foreach>
+        ,gradeCode =
+        <foreach collection="list" item="stu" index="index" separator=" " open="case user_id" close="end">
+            when #{stu.userId,jdbcType=DECIMAL} then #{stu.gradeCode,jdbcType=VARCHAR}
+        </foreach>
+        ,classCode =
+        <foreach collection="list" item="stu" index="index" separator=" " open="case user_id" close="end">
+            when #{stu.userId,jdbcType=DECIMAL} then #{stu.classCode,jdbcType=VARCHAR}
+        </foreach>
+        where user_id in
+        <foreach collection="list" index="index" item="stu" separator="," open="(" close=")">
+            #{stu.userId,jdbcType=DECIMAL}
+        </foreach>
+    </update>
+
+</mapper>

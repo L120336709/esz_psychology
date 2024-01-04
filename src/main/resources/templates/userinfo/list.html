@@ -1,0 +1,317 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('用户列表')"/>
+    <th:block th:include="include :: layout-latest-css"/>
+    <th:block th:include="include :: ztree-css"/>
+</head>
+<body class="gray-bg">
+<div class="ui-layout-west">
+    <div class="main-content">
+        <div class="box box-main">
+            <div class="box-header">
+                <div class="box-title">
+                    <i class="fa icon-grid"></i> 组织机构
+                </div>
+                <div class="box-tools pull-right">
+                    <input id="cbxIncludeSubset" type="checkbox"/>
+                    <label for="cbxIncludeSubset">包含下属机构</label>
+                    <button type="button" class="btn btn-box-tool" id="btnExpand" title="展开" style="display:none;"><i
+                            class="fa fa-chevron-up"></i></button>
+                    <button type="button" class="btn btn-box-tool" id="btnCollapse" title="折叠"><i
+                            class="fa fa-chevron-down"></i></button>
+                    <button type="button" class="btn btn-box-tool" id="btnRefresh" title="刷新部门"><i
+                            class="fa fa-refresh"></i></button>
+                </div>
+            </div>
+            <div class="ui-layout-content">
+                <div id="tree" class="ztree"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-div ui-layout-center">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="form1" autocomplete="off" action="/userinfo/exports" method="post">
+                <input type="hidden" id="orgId" name="orgId" th:value="${orgId}">
+                <input type="hidden" id="includeSubset" name="includeSubset" value="2"/>
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            真实姓名：<input type="text" name="realName"/>
+                        </li>
+
+                        <li>
+                            年级：
+                            <select id="gradeId"  name="gradeId"></select>
+                        </li>
+<!--                        <li>-->
+<!--                            班级：<select id="classId"  name="classId"></select>-->
+<!--                        </li>-->
+                        <!--<li>-->
+                            <!--状态：<select name="status"-->
+                                       <!--th:with="dictData=${@dict.getDictDataByTypeCode('sys_common_status')}">-->
+                            <!--<option value="">所有</option>-->
+                            <!--<option th:each="data : ${dictData}" th:text="${data.dataLabel}"-->
+                                    <!--th:value="${data.dataValue}"></option>-->
+                        <!--</select>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--用户身份：<select name="identity"-->
+                                         <!--th:with="dictData=${@dict.getDictDataByTypeCode('user_identity')}">-->
+                            <!--<option value="">所有</option>-->
+                            <!--<option th:each="data : ${dictData}" th:text="${data.dataLabel}"-->
+                                    <!--th:value="${data.dataValue}"></option>-->
+                        <!--</select>-->
+                        <!--</li>-->
+                        <!--                        <li>-->
+                        <!--                            下属机构：-->
+                        <!--                            <input id="includeSubset" name="includeSubset" type="checkbox" value="1" />-->
+                        <!--                            <label  for="includeSubset">包含下属机构</label >-->
+                        <!--                        </li>-->
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+
+                            <a class="btn btn-success" onclick="moban();">
+                                <i class="fa fa-download" ></i> 下载模版
+                            </a>
+
+                            <a class="btn btn-success" onclick="$.table.importExcel()">
+                                <i class="fa fa-upload"></i> 导入
+                            </a>
+
+
+
+                            <a class="btn btn-success" onclick="daochu();">
+                                <i class="fa fa-download" ></i> 导出完善过信息的学生
+                            </a>
+                        </li>
+
+
+                    </ul>
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+
+
+    </div>
+
+
+
+
+</div>
+
+<div>
+    <form id="importForm" name="importFile" class="form-horizontal" method="post"
+          enctype="multipart/form-data" hidden="hidden">
+        <input id="file" name="file" class="file-loading" type="file" multiple accept=".xls,.xlsx">
+    </form>
+</div>
+
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: layout-latest-js"/>
+<th:block th:include="include :: ztree-js"/>
+<script th:src="@{/js/ajaxfileupload.js}"></script>
+<script th:inline="javascript">
+    var publish_status = [[${@dict.getTaskPublishStatus()}]];
+    var datas_status = [[${@dict.getDictDataByTypeCode('sys_common_status')}]];
+    var prefix = ctx + "userinfo";
+
+    $(function () {
+        var panehHidden = false;
+        if ($(this).width() < 769) {
+            panehHidden = true;
+        }
+        $('body').layout({initClosed: panehHidden, west__size: 250});
+        queryOrgInfoTree();
+        queryUserList();
+    });
+
+    function queryUserList() {
+        var options = {
+            url: prefix + "/list",
+            importUrl: prefix + "/import",
+            search: false,
+            modalName: "用户",
+            formId: "form1",
+            showSearch: false,
+            showColumns: false,
+            columns: [
+                {
+                    field: 'realName',
+                    title: '真实姓名',
+                    //align: 'center',
+                    //width: '20%',
+                    //sortable: true
+                },
+                {
+                    field: 'orgName',
+                    title: '机构名称',
+                    //align: 'center',
+                    //width: '20%',
+                    //sortable: true
+                },
+                {
+                    field: 'gradeName',
+                    title: '年级名称',
+                    //align: 'center',
+                    //width: '20%',
+                    //sortable: true
+                },
+                {
+                    field: 'className',
+                    title: '班级名称',
+                    //align: 'center',
+                    //width: '20%',
+                    //sortable: true
+                },
+                {
+                    field: 'status',
+                    title: '状态',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(datas_status, value);
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    //width: '20%',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-info btn-xs " href="#" onclick="$.operate.editTabUrl(\'[' + row.realName + ']档案\',ctx+\'userinfo/detail/' + row.userId + '\')"><i class="fa fa-info-circle"></i>详情</a> ');
+                        if (publish_status == "show") {
+                            actions.push('<a class="btn btn-success btn-xs " href="#" onclick="$.operate.editTabUrl(\'编辑[' + row.realName + ']档案\',ctx+\'userinfo/edit/' + row.userId + '\')"><i class="fa fa-edit"></i>完善信息</a> ');
+                        }
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    }
+
+    function queryOrgInfoTree() {
+        var url = ctx + "orginfo/treeData";
+        var options = {
+            url: url,
+            expandLevel: 1,
+            onClick: zOnClick
+        };
+        $.tree.init(options);
+
+        function zOnClick(event, treeId, treeNode) {
+            $("#orgId").val(treeNode.id);
+            $.table.search();
+        }
+    }
+
+    $("#cbxIncludeSubset").click(function () {
+        if ($(this).prop("checked")) {
+            $("#includeSubset").val(1);
+        } else {
+            $("#includeSubset").val(2);
+        }
+        $.table.search();
+    });
+
+    $('#btnExpand').click(function () {
+        $._tree.expandAll(true);
+        $(this).hide();
+        $('#btnCollapse').show();
+    });
+
+    $('#btnCollapse').click(function () {
+        $._tree.expandAll(false);
+        $(this).hide();
+        $('#btnExpand').show();
+    });
+
+    $('#btnRefresh').click(function () {
+        queryOrgInfoTree();
+    });
+
+    function daochu(){
+        $("#form1").submit();//或者jQuery方式,二选一，不过现在已经没啥项目不引入jQuery了吧。。。
+    }
+    function moban() {
+        var form = $("<form method='post'></form>");
+        var input;
+        form.attr({"action":"/userinfo/export"});
+        $(document.body).append(form);
+        form.submit();
+    }
+
+    function ajaxFileUpload() {
+        $.ajaxFileUpload({
+            fileElementId: "file",    //需要上传的文件域的ID，即<input type="file">的ID。
+            url: "/uploads/fileExcel", //后台方法的路径
+            type: "post",   //当要提交自定义参数时，这个参数要设置成post
+            accept: 'application/vnd.ms-excel',
+            dataType: "json",   //服务器返回的数据类型。可以为xml,script,json,html。如果不填写，jQuery会自动判断。
+            success: function (data) {   //提交成功后自动执行的处理函数，参数data就是服务器返回的数据。
+                console.log(data);
+                if (data.code == 200) {
+                    $("#filePath").val(data.path);
+                }
+            },
+            error: function (data, status, e) {  //提交失败自动执行的处理函数。
+
+            }
+        });
+    }
+
+    $.post("/gradeinfo/selectGradeInfos",{code:""},function(data){
+        //循环插入在select中
+        $("#gradeId").append($("<option>").val('').html('请选择'));
+        for(var i=0;i < data.length;i++){
+            $("#gradeId").append($("<option>").val(data[i].id).html(data[i].name));
+        }
+        $("#gradeId").change();
+    },"json");
+
+    // var gradeId = "";
+    // 传入一级下拉框选择的值对应的id，获取二级下拉框内容
+    // $("#gradeId").change(function(){
+    //     gradeId = $(this).val();
+    //     $.post("/classinfo/selectClassInfoByGradeId",{gradeId:gradeId},function(data){
+    //         $("#classId").empty();//置空
+    //         $("#classId").append($("<option>").val('').html('请选择'));
+    //         for(var i=0;i < data.length;i++){
+    //             $("#classId").append($("<option>").val(data[i].id).html(data[i].name));
+    //         }
+    //         $("#classId").change();
+    //     },"json")
+    // });
+
+    // 传入二级下拉框选择的值对应的id，获取三级下拉框内容
+    $("#classId").change(function(){
+        var classId = $(this).val()
+        $.post("/userinfo/getStudentsByGradeClassId",{gradeId:gradeId,classId:classId},function(data){
+            $("#studentId").empty();//置空
+            $("#studentId").append($("<option>").val('').html('请选择'));
+            for(var i=0;i < data.length;i++){
+                $("#studentId").append($("<option>").val(data[i].id).html(data[i].name));
+            }
+        },"json")
+    });
+
+
+
+</script>
+</body>
+</html>

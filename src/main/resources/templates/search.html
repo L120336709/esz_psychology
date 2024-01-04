@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <title class="title">恩施州成人高考考场查询</title>
+<!--    <script th:src="@{/js/base.js}"></script>-->
+</head>
+<body>
+      <div id="header">
+            <img src="http://www.eszedu.com/resource/enshi/static/images/logo1.png" style="margin-top: 15px;">
+        </div>
+    <div id="container">
+
+<div class="title" id="title" ></div>
+<div class="tip">温馨提示：查询后请截图保存，避免集中查询造成网络拥堵。</div>
+<form action="" id="formid" >
+
+    <div style="background-color: white;border-radius: 6px; height: 80px;line-height: 80px; text-align: left;margin-top: 2px;" >
+        <label style="margin-left: 15px;">考生姓名33<input id="examineename" placeholder="请输入你的姓名"  type="text" class="info-inpput" style="margin-left: 15px;"></label>
+        <label style="margin-left: 15px;">准考证号<input id="examregistrationnumber" placeholder="请输入你的准考证号" type="text" class="info-inpput" style="margin-left: 15px;"></label>
+        <button type="button" class="btn1" id="btnSubmit">查询</button>
+        <button type="button" class="btn1"  onclick="form_set()">重置</button>
+    </div>
+    <div class="content"  style="background-color:white;margin-top: 2px; text-align: center;padding:3% 10%;" id="showinfo">
+        <div style="width: 90%;" align="center">
+            <table class="tb" >
+            <tr class="row">
+                <td class="option">姓名</td>
+                <td class="option-con"></td>
+
+            </tr>
+            <tr class="row">
+                <td class="option">准考证号</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">考点代码</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">考点名称</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">考点地址</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">考场号</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">楼栋</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">楼层</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option">教室号</td>
+                <td class="option-con"></td>
+            </tr>
+            <tr class="row">
+                <td class="option bnone">座位号</td>
+                <td class="option-con bnone"></td>
+            </tr>
+        </table>
+        </div>
+    </div>
+
+</form>
+<div align="center" ><img class="desearchresult" th:src="@{/img/searchresult.png}" alt="" /></div>
+    </div>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<!--<script th:src="@{/js/resizewindow.js}"></script>-->
+<script>
+    $(document).ready(function() {
+        $("#btnSubmit").click(function() {
+            if (Check()) {
+                get_info();
+            }
+        });
+    });
+
+     //标题
+    $(function(){
+        $.ajax({
+            url:'/adulttitletable/table/selectEndurance',
+            data:{'id':1},
+            dataType:'json',
+            type:'post',
+            success:function(data){
+                if (data.code==200) {
+                    var titlelist= {};
+                    titlelist = data.data; //数组
+                    if( titlelist.length!=0){
+                        bon= '<div class="title">' + titlelist.adulttitle + '</div>'
+                        $("#title").html(bon);
+                        return false;
+                    }else {
+                        alert("系统有误请稍后重试....");
+                        return false;
+                    }
+                } else {
+                    alert("系统有误请稍后重试....");
+                    return false;
+                }
+            },
+        });
+         })
+
+    function get_info(){
+        var examineename = $("#examineename").val();
+        var examregistrationnumber = $("#examregistrationnumber").val();
+        $.ajax({
+            url:'/sapiential/table/selectEndurance',
+            data:{'examineename':examineename, 'examregistrationnumber':examregistrationnumber},
+            dataType:'json',
+            type:'post',
+            success:function(data){
+                if (data.code==200) {
+                    var byts= {};
+                    byts = data.data; //数组
+                    if(byts.length!=0){
+                            var con = '<table class="tb">'
+                            con += '<tr class="row"><td class="option">姓名</td>'
+                            con += '<td class="option-con">' + byts.examineename + '</td></tr>'
+                            con += '<tr class="row"><td class="option">准考证号</td>'
+                            con += '<td class="option-con">' + byts.examregistrationnumber + '</td></tr>'
+                            con += '<tr class="row"><td class="option">考点代码</td>'
+                            con += '<td class="option-con">' + byts.thetestcode + '</td></tr>'
+                            con += '<tr class="row"><td class="option">考点名称</td>'
+                            con += '<td class="option-con">' + byts.theexaminationsitename + '</td></tr>'
+                            con += '<tr class="row"><td class="option">考点地址</td>'
+                            con += '<td class="option-con">' + byts.theexaminationsiteaddress + '</td></tr>'
+                            con += '<tr class="row"><td class="option">考场号</td>'
+                            con += '<td class="option-con">' + byts.delegationexploratorymission + '</td></tr>'
+                            con += '<tr class="row"><td class="option">楼栋</td>'
+                            con += '<td class="option-con">' + byts.building + '</td></tr>'
+                            con += '<tr class="row"><td class="option">楼层</td>'
+                            con += '<td class="option-con">' + byts.floorlevel + '</td></tr>'
+                            con += '<tr class="row"><td class="option">教室号</td>'
+                            con += '<td class="option-con">' + byts.theclassroomno + '</td></tr>'
+                            con += '<tr class="row"><td class="option bnone">座位号</td>'
+                            con += '<td class="option-con bnone">' + byts.seatnumber + '</td></tr>'
+                            $("#showinfo").html(con);
+                            return false;
+                    }else{
+                        alert("请检查准考证号或姓名输入是否正确！");
+                        return false;
+                    }
+                    alert("请检查准考证号或姓名输入是否正确!");
+                    return false;
+
+                } else {
+                    alert("请检查准考证号或姓名输入是否正确!");
+                    return false;
+                }
+            },
+        });
+
+        return false;
+    }
+    // 重置表单
+    function form_set(){
+        document.getElementById("formid").reset();
+        return false;
+    }
+
+    function Check() {
+        if (!/^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/.test($("#examineename").val())) {
+            alert("姓名格式错误！");
+            // $("#examineename").focus();
+            return false;
+        }
+        if ($("#examregistrationnumber").val() == "") {
+            alert("准考证号不能为空！");
+            // $("#examregistrationnumber").focus();
+            return false;
+        }
+        if ($("#examineename").val() == "") {
+            alert("姓名不能为空！");
+            // $("#examineename").focus();
+            return false;
+        }
+        return true;
+    }
+</script>
+
+</body>
+<style>
+    body, html {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        background-color: #F5F5F5;
+        font-size: 14px;
+    }
+
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    #container{
+        margin: 0% 16%;
+
+    }
+    #header{
+        height: 65px;
+        background-color: #3784E4;
+        width: 100%;
+    }
+    .title{
+        margin-top: 5px;
+        background-color: white;
+        font-size: 25px;
+        font-weight: bold;
+        color: #3784e4;
+        letter-spacing: 3px;
+        height: 55px;
+        line-height: 55px;
+        text-align: center;
+        border-radius: 6px;
+    }
+    .tip{
+       width: 96.7%;
+        height: 20px;
+        margin-top: 5px;
+        padding: 15px;
+        background-color: #8ab6d6;
+        /*border-left: 8px solid #fa1e0e;*/
+        font-size: 16px;
+        letter-spacing: 2px;
+        color: #433520;
+        box-shadow: 3px 3px 3px #aaaaaa;
+        border-radius: 6px;
+    }
+
+    .desearchresult{
+        width: 20%;
+        height: 20%;
+    }
+
+
+    .info-item span{
+        width: 70px;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 16px;
+    }
+
+    .info-inpput{
+        margin-left: 5px;
+        box-sizing: border-box;
+        width: 28%;
+        height: 28px;
+        background-color: #f4f4f2;
+        border: none;
+        border-radius: 3px;
+        border: 1px solid #eee;
+    }
+
+    .btn1{
+
+        width: 55px;
+        height: 28px;
+        line-height: 28px;
+        text-align: center;
+        color: #FFF;
+        font-size: 14px;
+        font-family: "Microsoft YaHei", sans-serif;
+        margin-left: 15px;
+        background-color: #98ded9;
+        border-radius: 3px;
+        border: none;
+    }
+     .btn1 button:hover{
+        cursor: pointer;
+        background-color: #fff;
+        color: #222831;
+        border: none;
+    }
+    .btn button{
+        width: 50px;
+        height: 30px;
+        margin: 0 20px;
+        background-color: #98ded9;
+        color: #252525;
+        border: none;
+        border-radius: 6px;
+    }
+    .btn button:hover{
+        cursor: pointer;
+        background-color: #6f9eaf;
+        color: #222831;
+        border: none;
+    }
+    .content{
+        width: 80%;
+        padding: 10%;
+        margin-top: 3px;
+        text-align: center;
+    }
+    .tb{
+        width: 100%;
+
+    }
+    .row{
+        height: 18px;
+        padding: 5px;
+    }
+    .option{
+        width:30%;
+        padding-left: 25px;
+        height: 30px;
+        color: #000000;
+        font-size: 16px;
+        background-color: #f1f1f1;
+    }
+    .option-con{
+       border:1px solid  #f1f1f1;
+    }
+
+</style>
+</html>

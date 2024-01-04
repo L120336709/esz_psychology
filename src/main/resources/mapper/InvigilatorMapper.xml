@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.InvigilatorMapper">
+    
+    <resultMap type="Invigilator" id="InvigilatorResult">
+        <result property="teachid"    column="teachid"    />
+        <result property="teachname"    column="teachname"    />
+        <result property="idnumber"    column="idnumber"    />
+        <result property="gender"    column="gender"    />
+        <result property="academic"    column="academic"    />
+        <result property="subject"    column="subject"    />
+        <result property="unitname"    column="unitname"    />
+        <result property="officialcapacity"    column="officialcapacity"    />
+        <result property="phonenumber"    column="phonenumber"    />
+        <result property="bankaccount"    column="bankaccount"    />
+        <result property="bankdeposit"    column="bankdeposit"    />
+        <result property="positionarea"    column="positionarea"    />
+        <result property="positionsite"    column="positionsite"    />
+        <result property="positionroom"    column="positionroom"    />
+        <result property="positiongroup"    column="positiongroup"    />
+        <result property="positionpeoplegroup"    column="positionpeoplegroup"    />
+        <result property="positionpeoplecode"    column="positionpeoplecode"    />
+    </resultMap>
+	
+	<sql id="selectInvigilatorVo">
+        select teachid, teachname, idnumber, gender, academic, subject, unitname, officialcapacity, phonenumber, bankaccount, bankdeposit, positionarea, positionsite, positionroom, positiongroup, positionpeoplegroup, positionpeoplecode from invigilator
+    </sql>
+	
+    <select id="selectInvigilatorList" parameterType="Invigilator" resultMap="InvigilatorResult">
+        <include refid="selectInvigilatorVo"/>
+        <where>  
+            <if test="teachid != null  and teachid != '' "> and teachid = #{teachid}</if>
+             <if test="teachname != null  and teachname != '' "> and teachname = #{teachname}</if>
+             <if test="idnumber != null  and idnumber != '' "> and idnumber = #{idnumber}</if>
+             <if test="gender != null  and gender != '' "> and gender = #{gender}</if>
+             <if test="academic != null  and academic != '' "> and academic = #{academic}</if>
+             <if test="subject != null  and subject != '' "> and subject = #{subject}</if>
+             <if test="unitname != null  and unitname != '' "> and unitname = #{unitname}</if>
+             <if test="officialcapacity != null  and officialcapacity != '' "> and officialcapacity = #{officialcapacity}</if>
+             <if test="phonenumber != null  and phonenumber != '' "> and phonenumber = #{phonenumber}</if>
+             <if test="bankaccount != null  and bankaccount != '' "> and bankaccount = #{bankaccount}</if>
+             <if test="bankdeposit != null  and bankdeposit != '' "> and bankdeposit = #{bankdeposit}</if>
+             <if test="positionarea != null  and positionarea != '' "> and positionarea = #{positionarea}</if>
+             <if test="positionsite != null  and positionsite != '' "> and positionsite = #{positionsite}</if>
+             <if test="positionroom != null  and positionroom != '' "> and positionroom = #{positionroom}</if>
+             <if test="positiongroup != null  and positiongroup != '' "> and positiongroup = #{positiongroup}</if>
+             <if test="positionpeoplegroup != null  and positionpeoplegroup != '' "> and positionpeoplegroup = #{positionpeoplegroup}</if>
+             <if test="positionpeoplecode != null  and positionpeoplecode != '' "> and positionpeoplecode = #{positionpeoplecode}</if>
+         </where>
+    </select>
+    
+    <select id="selectInvigilatorById" parameterType="String" resultMap="InvigilatorResult">
+        <include refid="selectInvigilatorVo"/>
+        where teachid = #{teachid}
+    </select>
+
+    <!--批量查找数据 -->
+    <select id="findUserListByIdnumberList" parameterType="java.util.ArrayList" resultMap="InvigilatorResult">
+        <include refid="selectInvigilatorVo"/>
+        <where>
+            idnumber in (
+            <foreach collection="list"  item="idnumber" index="index" separator=",">
+                #{idnumber}
+            </foreach>
+            )
+        </where>
+    </select>
+
+    <!--批量插入数据 -->
+    <insert id="insertInvigilatorList"  >
+        insert into invigilator (teachid, teachname, idnumber, gender, academic, subject, unitname, officialcapacity, phonenumber, bankaccount, bankdeposit, positionarea, positionsite, positionroom, positiongroup, positionpeoplegroup, positionpeoplecode)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.teachid},#{item.teachname},#{item.idnumber},#{item.gender},#{item.academic},#{item.subject},#{item.unitname},#{item.officialcapacity},#{item.phonenumber},#{item.bankaccount},#{item.bankdeposit},#{item.positionarea},#{item.positionsite},#{item.positionroom},#{item.positiongroup},#{item.positionpeoplegroup},#{item.positionpeoplecode})
+        </foreach>
+    </insert>
+
+
+    <!--批量更新数据 -->
+    <update id="updateInvigilatorList" parameterType="java.util.List">
+        update invigilator set
+        teachname =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.teachname,jdbcType=VARCHAR}
+        </foreach>
+        ,idnumber =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.idnumber,jdbcType=VARCHAR}
+        </foreach>
+        ,gender =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.gender,jdbcType=VARCHAR}
+        </foreach>
+        ,academic =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.academic,jdbcType=VARCHAR}
+        </foreach>
+        ,subject =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.subject,jdbcType=VARCHAR}
+        </foreach>
+        ,unitname =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.unitname,jdbcType=VARCHAR}
+        </foreach>
+        ,officialcapacity =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.officialcapacity,jdbcType=VARCHAR}
+        </foreach>
+        ,phonenumber =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.phonenumber,jdbcType=VARCHAR}
+        </foreach>
+        ,bankaccount =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.bankaccount,jdbcType=VARCHAR}
+        </foreach>
+        ,bankdeposit =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.bankdeposit,jdbcType=VARCHAR}
+        </foreach>
+        ,positionarea =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.positionarea,jdbcType=VARCHAR}
+        </foreach>
+        ,positionsite =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.positionsite,jdbcType=VARCHAR}
+        </foreach>
+        ,positionroom =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.positionroom,jdbcType=VARCHAR}
+        </foreach>
+        ,positiongroup =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.positiongroup,jdbcType=VARCHAR}
+        </foreach>
+        ,positionpeoplegroup =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.positionpeoplegroup,jdbcType=VARCHAR}
+        </foreach>
+        ,positionpeoplecode =
+        <foreach collection="list" item="item" index="index" separator=" " open="case teachid" close="end">
+            when #{item.teachid,jdbcType=DECIMAL} then #{item.positionpeoplecode,jdbcType=VARCHAR}
+        </foreach>
+
+        where teachid in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.teachid,jdbcType=DECIMAL}
+        </foreach>
+    </update>
+
+
+
+
+
+
+
+
+
+
+
+    <insert id="insertInvigilator" parameterType="Invigilator">
+        insert into invigilator
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="teachid != null  and teachid != ''  ">teachid,</if>
+			<if test="teachname != null  and teachname != ''  ">teachname,</if>
+			<if test="idnumber != null  and idnumber != ''  ">idnumber,</if>
+			<if test="gender != null  and gender != ''  ">gender,</if>
+			<if test="academic != null  and academic != ''  ">academic,</if>
+			<if test="subject != null  and subject != ''  ">subject,</if>
+			<if test="unitname != null  and unitname != ''  ">unitname,</if>
+			<if test="officialcapacity != null  and officialcapacity != ''  ">officialcapacity,</if>
+			<if test="phonenumber != null  and phonenumber != ''  ">phonenumber,</if>
+			<if test="bankaccount != null  and bankaccount != ''  ">bankaccount,</if>
+			<if test="bankdeposit != null  and bankdeposit != ''  ">bankdeposit,</if>
+			<if test="positionarea != null  and positionarea != ''  ">positionarea,</if>
+			<if test="positionsite != null  and positionsite != ''  ">positionsite,</if>
+			<if test="positionroom != null  and positionroom != ''  ">positionroom,</if>
+			<if test="positiongroup != null  and positiongroup != ''  ">positiongroup,</if>
+			<if test="positionpeoplegroup != null  and positionpeoplegroup != ''  ">positionpeoplegroup,</if>
+			<if test="positionpeoplecode != null  and positionpeoplecode != ''  ">positionpeoplecode,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="teachid != null  and teachid != ''  ">#{teachid},</if>
+			<if test="teachname != null  and teachname != ''  ">#{teachname},</if>
+			<if test="idnumber != null  and idnumber != ''  ">#{idnumber},</if>
+			<if test="gender != null  and gender != ''  ">#{gender},</if>
+			<if test="academic != null  and academic != ''  ">#{academic},</if>
+			<if test="subject != null  and subject != ''  ">#{subject},</if>
+			<if test="unitname != null  and unitname != ''  ">#{unitname},</if>
+			<if test="officialcapacity != null  and officialcapacity != ''  ">#{officialcapacity},</if>
+			<if test="phonenumber != null  and phonenumber != ''  ">#{phonenumber},</if>
+			<if test="bankaccount != null  and bankaccount != ''  ">#{bankaccount},</if>
+			<if test="bankdeposit != null  and bankdeposit != ''  ">#{bankdeposit},</if>
+			<if test="positionarea != null  and positionarea != ''  ">#{positionarea},</if>
+			<if test="positionsite != null  and positionsite != ''  ">#{positionsite},</if>
+			<if test="positionroom != null  and positionroom != ''  ">#{positionroom},</if>
+			<if test="positiongroup != null  and positiongroup != ''  ">#{positiongroup},</if>
+			<if test="positionpeoplegroup != null  and positionpeoplegroup != ''  ">#{positionpeoplegroup},</if>
+			<if test="positionpeoplecode != null  and positionpeoplecode != ''  ">#{positionpeoplecode},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateInvigilator" parameterType="Invigilator">
+        update invigilator
+        <trim prefix="SET" suffixOverrides=",">
+            teachname = #{teachname},
+            idnumber = #{idnumber},
+            gender = #{gender},
+            academic = #{academic},
+            subject = #{subject},
+            unitname = #{unitname},
+            officialcapacity = #{officialcapacity},
+            phonenumber = #{phonenumber},
+            bankaccount = #{bankaccount},
+            bankdeposit = #{bankdeposit},
+            positionarea = #{positionarea},
+            positionsite = #{positionsite},
+            positionroom = #{positionroom},
+            positiongroup = #{positiongroup},
+            positionpeoplegroup = #{positionpeoplegroup},
+            positionpeoplecode = #{positionpeoplecode},
+        </trim>
+        where teachid = #{teachid}
+    </update>
+
+	<delete id="deleteInvigilatorById" parameterType="String">
+        delete from invigilator where teachid = #{teachid}
+    </delete>
+	
+    <delete id="deleteInvigilatorByIds" parameterType="String">
+        delete from invigilator where teachid in
+        <foreach item="teachid" collection="array" open="(" separator="," close=")">
+            #{teachid}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>教师心育培训管理</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <!--[if lt IE 9]>
+    <script type="text/javascript">
+        var str = "此站点不支持你的浏览器，请更换你的浏览器浏览此站点";
+        var str2 = "推荐使用:<a href='https://www.baidu.com/s?ie=UTF-8&wd=%E8%B0%B7%E6%AD%8C%E6%B5%8F%E8%A7%88%E5%99%A8' target='_blank' style='color:blue;'>谷歌</a>,"
+                + "<a href='https://www.baidu.com/s?ie=UTF-8&wd=%E7%81%AB%E7%8B%90%E6%B5%8F%E8%A7%88%E5%99%A8' target='_blank' style='color:blue;'>火狐</a>,"
+                + "其他双核极速模式";
+        document.writeln("<pre style='text-align:center; height:100%;border:0;position:fixed;top:0;left:0;width:100%;z-index:1234'>" +
+                "<h2 style='padding-top:200px;margin:0'><strong>" + str + "<br/></strong></h2><h2>" +
+                str2 + "</h2><h2 style='margin:0'><strong>如果你的使用的是双核浏览器,请切换到极速模式访问<br/></strong></h2></pre>");
+        document.execCommand("Stop");
+    </script>
+    <![endif]-->
+    <link th:href="@{favicon.ico}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/animate.css}" rel="stylesheet"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/css/skins.css}" rel="stylesheet"/>
+    <link th:href="@{/css/global.css?v=3.3.0}" rel="stylesheet"/>
+    <style type="text/css">
+        #content-main.max { height: calc(100% - 110px); overflow: hidden; width: 100%; height: 100%; left: 0px; position: absolute; top: 0px; z-index: 9998; margin: 0; }
+    </style>
+    <script type="text/javascript">
+        //非极速模式下
+        //极速模式下的 值为 Netscape
+        if (navigator.appName === 'Microsoft Internet Explorer') {
+            //动态添加 meta元素 并设置相关项
+            var headV=document.getElementById("header");
+            var metaV=document.createElement('meta');
+            metaV.name='renderer';
+            metaV.content='webkit';
+            headV.appendChild(metaV);
+        }
+    </script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg skin-blue" style="overflow: hidden">
+<div id="wrapper">
+    <!--左侧导航开始-->
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="nav-close">
+            <i class="fa fa-times-circle"></i>
+        </div>
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="logo">
+                    <span class="logo-lg" style="font-size: 23px">教师心育培训管理</span>
+                </li>
+<!--                <li class="active">-->
+<!--                   <a href="index.html"><i class="fa fa-home"></i> <span class="nav-label">档案维护</span> <span class="fa arrow"></span></a>-->
+<!--                   <ul class="nav nav-second-level">-->
+<!--                       <li class="active"><a class="menuItem" th:href="@{/dossier/}+${user.userId}">个人档案维护</a></li>-->
+<!--                   </ul>-->
+<!--               </li>-->
+                <li th:each="menu : ${menus}">
+                    <a href="#">
+                        <i class="fa fa fa-bar-chart-o" th:class="${menu.icon}"></i>
+                        <span class="nav-label" th:text="${menu.menuName}" >一级菜单</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level collapse">
+                        <li th:each="cmenu : ${menu.children}">
+                            <a th:if="${#lists.isEmpty(cmenu.children)}" class="menuItem" th:utext="${cmenu.menuName}"
+                               th:href="@{${cmenu.url}}">二级菜单</a>
+<!--                            <a th:if="${not #lists.isEmpty(cmenu.children)}" href="#">[[${cmenu.menuName}]]<span-->
+<!--                                    class="fa arrow"></span></a>-->
+<!--                            <ul th:if="${not #lists.isEmpty(cmenu.children)}" class="nav nav-third-level">-->
+<!--                                <li th:each="emenu : ${cmenu.children}"><a class="menuItem" th:text="${emenu.menuName}"-->
+<!--                                                                           th:href="@{${emenu.url}}">三级菜单</a></li>-->
+<!--                            </ul>-->
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--左侧导航结束-->
+
+    <!--右侧部分开始-->
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation"
+                 style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2" style="color:#FFF;" href="#" title="收起菜单">
+                        <i class="fa fa-bars"></i>
+                    </a>
+                </div>
+                <ul class="nav navbar-top-links navbar-right welcome-message">
+                    <!--<li><a title="预留的位置" href="" target="_blank"><i class="fa fa-question-circle"></i> 预留的位置</a></li>-->
+<!--                    <li><a target="_blank" style="color:#fff;" href='http://static.eszedu.com/helpfile/4 恩施州智慧教育大数据平台-学生成长档案管理子系统使用手册.pdf'>帮助</a></li>-->
+                    <!--                  <li><a target="_blank" style="color:#fff;" href='http://www.jianshijy.cn//'>首页</a></li>-->
+                    <li><a target="_blank" style="color:#fff;" href='http://www.eszedu.com//'>首页</a></li>
+                    <li><a title="全屏显示" id="fullScreen"><i class="fa fa-arrows-alt"></i> 全屏显示</a></li>
+                    <li class="dropdown user-menu">
+                        <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                            <img src="/img/profile.jpg" class="user-image">
+                            <span class="hidden-xs">[[${user.realName}]]</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!--<li class="mt5">-->
+                                <!--<a th:href="@{/dossier/detail}" class="menuItem">-->
+                                    <!--<i class="fa fa-user"></i> 个人档案</a>-->
+                            <!--</li>-->
+                            <!--<li>-->
+                                <!--<a onclick="resetPwd()" class="menuItem">-->
+                                    <!--<i class="fa fa-key"></i> 修改密码</a>-->
+                            <!--</li>-->
+                            <!--<li class="divider"></li>-->
+                            <!--<li>-->
+                                <!--<a th:href="@{logout}">-->
+                                    <!--<i class="fa fa-sign-out"></i> 退出登录</a>-->
+                            <!--</li>-->
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="row content-tabs">
+            <button class="roll-nav roll-left tabLeft">
+                <i class="fa fa-backward"></i>
+            </button>
+            <nav class="page-tabs menuTabs">
+                <div class="page-tabs-content">
+                    <a href="javascript:;" class="active menuTab" data-id="/main">首页</a>
+                </div>
+            </nav>
+            <button class="roll-nav roll-right tabRight">
+                <i class="fa fa-forward"></i>
+            </button>
+            <div class="btn-group roll-nav roll-right">
+                <button class="dropdown J_tabClose" data-toggle="dropdown">
+                    页签操作<span class="caret"></span>
+                </button>
+                <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                    <li><a class="tabCloseCurrent" href="javascript:void();">关闭当前</a></li>
+                    <li><a class="tabCloseOther" href="javascript:void();">关闭其他</a></li>
+                    <li><a class="tabCloseAll" href="javascript:void();">全部关闭</a></li>
+                    <li><a class="tabMaxCurrent" href="javascript:void();">全屏显示</a></li>
+                </ul>
+            </div>
+            <a href="#" class="roll-nav roll-right tabReload"><i class="fa fa-refresh"></i> 刷新</a>
+        </div>
+
+        <a id="ax_close_max" class="ax_close_max" href="#" title="关闭全屏"> <i class="fa fa-times-circle-o"></i> </a>
+
+        <div class="row mainContent" id="content-main">
+            <iframe class="main_iframe" name="iframe0" width="100%" height="100%" data-id="/main"
+                    th:src="@{/main}" frameborder="0" seamless></iframe>
+        </div>
+        <div class="footer">
+        </div>
+    </div>
+    <!--右侧部分结束-->
+</div>
+<!-- 全局js -->
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
+<script th:src="@{/js/plugins/slimscroll/jquery.slimscroll.min.js}"></script>
+<script th:src="@{/libs/blockUI/jquery.blockUI.js}"></script>
+<script th:src="@{/libs/layer/layer.min.js}"></script>
+<script th:src="@{/js/global.js?v=3.3.0}"></script>
+<script th:src="@{/js/index.js}"></script>
+<script th:src="@{/libs/fullscreen/jquery.fullscreen.js}"></script>
+<script th:inline="javascript">var ctx = [[@{/}]];</script>
+</body>
+</html>

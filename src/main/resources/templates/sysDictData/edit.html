@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('修改字典数据')" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form1" th:object="${sysDictData}" autocomplete="off">
+        <input name="dataId" type="hidden" th:field="*{dataId}"/>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">字典标签：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="dataLabel" id="dataLabel"
+                       th:field="*{dataLabel}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">字典键值：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="dictDataValue" id="dataValue"
+                       th:field="*{dataValue}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">字典类型：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" readonly="true" th:field="*{typeCode}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">样式属性：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" id="cssClass" name="cssClass" th:field="*{cssClass}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">字典排序：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="dataSort" th:field="*{dataSort}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">回显样式：</label>
+            <div class="col-sm-8">
+                <select name="listClass" class="form-control m-b">
+                    <option value="" th:field="*{listClass}">---请选择---</option>
+                    <option value="default" th:field="*{listClass}">默认</option>
+                    <option value="primary" th:field="*{listClass}">主要</option>
+                    <option value="success" th:field="*{listClass}">成功</option>
+                    <option value="info" th:field="*{listClass}">信息</option>
+                    <option value="warning" th:field="*{listClass}">警告</option>
+                    <option value="danger" th:field="*{listClass}">危险</option>
+                </select>
+                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> table表格字典列显示样式属性</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">系统默认：</label>
+            <div class="col-sm-8">
+                <div class="radio-box" th:each="data : ${@dict.getDictDataByTypeCode('sys_common_yes_no')}">
+                    <input type="radio" th:id="${data.dataId}" name="isDefault" th:value="${data.dataValue}"
+                           th:field="*{isDefault}">
+                    <label th:for="${data.dataId}" th:text="${data.dataLabel}"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="col-sm-8">
+                <div class="radio-box" th:each="data : ${@dict.getDictDataByTypeCode('sys_common_status')}">
+                    <input type="radio" th:id="${data.dataId}" name="status" th:value="${data.dataValue}"
+                           th:field="*{status}">
+                    <label th:for="${data.dataId}" th:text="${data.dataLabel}"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="col-sm-8">
+                <textarea id="remark" name="remark" class="form-control">[[*{remark}]]</textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<script type="text/javascript">
+    var prefix = ctx + "sysDictData";
+
+    $("#form1").validate({
+        rules: {
+            dataLabel: {
+                required: true,
+            },
+            dataValue: {
+                required: true,
+            },
+            dataSort: {
+                required: true,
+                digits: true
+            },
+        }
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form1').serialize());
+        }
+    }
+</script>
+</body>
+</html>

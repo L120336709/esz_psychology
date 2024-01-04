@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="initial-scale=1, maximum-scale=2, minimum-scale=1, width=device-width, user-scalable=no">
+    <title>api测试</title>
+    <style type="text/css">
+        body {
+            min-width: auto;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="wrap" id="video" style="width: 500px; height:240px;">
+
+</div>
+<div>
+    <a onclick="desPlayer()">销毁组件</a>
+    <a onclick="load()">加载</a>
+    <a onclick="stop()">停止</a>
+    <a onclick="play()">播放</a>
+    <a onclick="pause()">暂停</a>
+    <a onclick="getlog()">打印log</a>
+</div>
+<script src="https://edu-cms.nosdn.127.net/topics/js/hammer.2.0.7.min_084aa824c6e6f64cf28551d070abe00c.js"></script>
+<script src="/js/psy/video01.js?v=2023121101"></script>
+<script id="vm" type="text/javascript">
+    var options = {
+        parent : document.getElementById('video'),
+        autoStart : false,
+        // waterMark : true,
+        // waterMarkContent : '水印测试',
+        // 以下为测试数据，业务中使用请填videoId和signature
+        videoData:{
+            // adUrl : '../res/pread.mp4',
+            // videoImgUrl : "https://imgsize.ph.126.net/?enlarge=true&imgurl=http://img1.ph.126.net/n5VwluA3g_CDfYXsnRwsEQ==/1561904645785237081.jpg_450x250x0x95.jpg",
+            // start : 5,
+            videos: [
+                {
+                    quality:1,
+                    format:'hls',
+                    videoUrl:'https://vodm0pihssv.vod.126.net/mooc-video/nos/hls/2018/05/21/1009300562_d1ebe669119b4e998669912b78a627fa_sd.m3u8'
+                }
+            ]
+        }
+    };
+
+    var player = EduPlayer.create(options);
+    player.$on('onTimeupdate',function (e) {
+        console.log('视频播放时间');
+        console.log(e);
+    });
+
+    function desPlayer(){
+        player.destroy();
+    }
+
+    function load(){
+        player.load(options.videoData);
+    }
+
+    function play(){
+        player.resume();
+    }
+
+    function stop(){
+        player.stop();
+    }
+    function pause(){
+        player.pause();
+    }
+    function getlog(){
+        player.getLog(function(t){
+            alert(t);
+        });
+    }
+</script>
+</body>
+
+</html>

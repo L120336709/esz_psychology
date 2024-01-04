@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <title>培训检测</title>
+    <link rel="stylesheet" href="/css/psy/psy.css?v=20231221"/>
+</head>
+<body  >
+<div class="bac_01">
+    <div class="bac_01_01">
+        <a href="https://www.eszedu.com"><img src="/img/psy/logo1.png" alt=""> </a>
+        <div>2023年恩施州心理健康培训课程</div>
+    </div>
+    <div class="bac_01_02">
+        <div><a onclick="toIndex()">首页</a></div>
+        <div><a onclick="toPxsm()">培训说明</a></div>
+        <div><a onclick="toXxjd()">学习档案</a></div>
+
+
+    </div>
+</div>
+<div class="bac_02">
+    <div></div>
+</div>
+
+<div id="xf"  class="xf"  >
+    <div id="timeName">剩余时间</div>
+    <div id="times" class="times" ></div>
+    <div  class="ttop" onclick="window.scrollTo(0, 0)">回到顶部</div>
+</div>
+
+<div class="bac_03">
+
+    <div class="bac_03_01" id="course"  >
+        <div class="bac_03_01_02" >线上培训学习测评</div>
+
+
+
+        <div style="color: #EA5350;width: 100%" >1、学习测评内容从配套题库随机抽取，共30道题。</div>
+        <div style="color: #EA5350;width: 100%" >2、考试时间60分钟，倒计时结束后自动提交试卷，可以提前提交。</div>
+        <div style="color: #EA5350;width: 100%" >3、在进入本界面后，请不要进行刷新、后退等页面操作，与考试无关的任何操作都会导致本次考试作废！</div>
+        <div style="color: #EA5350;width: 100%">4、刷新页面会重新进入新的试卷，题目和考试时间都会自动重置，本次考试不会保留，成绩作废！</div>
+        <div id="courses" class="courses">
+        </div>
+        <div style="width: 100%">
+            <button class='jcbutton' id="jcbutton" onclick="saveExam()">提交</button>
+        </div>
+    </div>
+</div>
+
+<div class="copy_right" id="copy_right">
+</div>
+<th:block th:include="include :: footer"/>
+
+<script src="/js/psy/psy.js?v=20231222"></script>
+<script src="/js/psy/pxjc.js?v=20231222"></script>
+</body>
+</html>

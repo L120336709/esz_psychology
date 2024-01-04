@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.AdulttitletableMapper">
+
+    <resultMap type="Adulttitletable" id="AdulttitletableResult">
+        <result property="id"    column="id"    />
+        <result property="adulttitle"    column="adulttitle"    />
+    </resultMap>
+
+    <sql id="selectAdulttitletableVo">
+        select id, adulttitle from adulttitletable
+    </sql>
+
+    <select id="selectAdulttitletableList" parameterType="Adulttitletable" resultMap="AdulttitletableResult">
+        <include refid="selectAdulttitletableVo"/>
+        <where>
+            <if test="adulttitle != null  and adulttitle != ''"> and adulttitle = #{adulttitle}</if>
+        </where>
+    </select>
+
+    <select id="selectAdulttitletableById" parameterType="Long" resultMap="AdulttitletableResult">
+        <include refid="selectAdulttitletableVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAdulttitletable" parameterType="Adulttitletable" useGeneratedKeys="true" keyProperty="id">
+        insert into adulttitletable
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="adulttitle != null">adulttitle,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="adulttitle != null">#{adulttitle},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAdulttitletable" parameterType="Adulttitletable">
+        update adulttitletable
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="adulttitle != null">adulttitle = #{adulttitle},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAdulttitletableById" parameterType="Long">
+        delete from adulttitletable where id = #{id}
+    </delete>
+
+    <delete id="deleteAdulttitletableByIds" parameterType="String">
+        delete from adulttitletable where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

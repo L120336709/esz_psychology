@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.PsyXExercisesMapper">
+    
+    <resultMap type="PsyXExercises" id="PsyXExercisesResult">
+        <result property="id"    column="id"    />
+        <result property="kcId"    column="kc_id"    />
+        <result property="kcName"    column="kc_name"    />
+        <result property="type"    column="type"    />
+        <result property="optionDtos"    column="optionDtos"    />
+        <result property="position"    column="position"    />
+        <result property="score"    column="score"    />
+        <result property="title"    column="title"    />
+        <result property="plainTextTitle"    column="plainTextTitle"    />
+        <result property="titleAttachment"    column="titleAttachment"    />
+        <result property="sampleAnswerJson"    column="sampleAnswerJson"    />
+        <result property="stdAnswer"    column="stdAnswer"    />
+        <result property="analyse"    column="analyse"    />
+        <result property="fillblankType"    column="fillblankType"    />
+        <result property="judgerules"    column="judgerules"    />
+    </resultMap>
+
+    <sql id="selectPsyXExercisesVo">
+        select id, kc_id, kc_name, type, optionDtos, position, score, title, plainTextTitle, titleAttachment, sampleAnswerJson, stdAnswer, analyse, fillblankType, judgerules from psy_x_exercises
+    </sql>
+
+    <select id="selectPsyXExercisesList" parameterType="PsyXExercises" resultMap="PsyXExercisesResult">
+        <include refid="selectPsyXExercisesVo"/>
+        <where>  
+            <if test="kcId != null "> and kc_id = #{kcId}</if>
+            <if test="kcName != null  and kcName != ''"> and kc_name like concat('%', #{kcName}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="optionDtos != null  and optionDtos != ''"> and optionDtos = #{optionDtos}</if>
+            <if test="position != null "> and position = #{position}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="plainTextTitle != null  and plainTextTitle != ''"> and plainTextTitle = #{plainTextTitle}</if>
+            <if test="titleAttachment != null  and titleAttachment != ''"> and titleAttachment = #{titleAttachment}</if>
+            <if test="sampleAnswerJson != null  and sampleAnswerJson != ''"> and sampleAnswerJson = #{sampleAnswerJson}</if>
+            <if test="stdAnswer != null  and stdAnswer != ''"> and stdAnswer = #{stdAnswer}</if>
+            <if test="analyse != null  and analyse != ''"> and analyse = #{analyse}</if>
+            <if test="fillblankType != null  and fillblankType != ''"> and fillblankType = #{fillblankType}</if>
+            <if test="judgerules != null  and judgerules != ''"> and judgerules = #{judgerules}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyXExercisesById" parameterType="Long" resultMap="PsyXExercisesResult">
+        <include refid="selectPsyXExercisesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyXExercises" parameterType="PsyXExercises">
+        insert into psy_x_exercises
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="kcId != null">kc_id,</if>
+            <if test="kcName != null">kc_name,</if>
+            <if test="type != null">type,</if>
+            <if test="optionDtos != null">optionDtos,</if>
+            <if test="position != null">position,</if>
+            <if test="score != null">score,</if>
+            <if test="title != null">title,</if>
+            <if test="plainTextTitle != null">plainTextTitle,</if>
+            <if test="titleAttachment != null">titleAttachment,</if>
+            <if test="sampleAnswerJson != null">sampleAnswerJson,</if>
+            <if test="stdAnswer != null">stdAnswer,</if>
+            <if test="analyse != null">analyse,</if>
+            <if test="fillblankType != null">fillblankType,</if>
+            <if test="judgerules != null">judgerules,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="kcId != null">#{kcId},</if>
+            <if test="kcName != null">#{kcName},</if>
+            <if test="type != null">#{type},</if>
+            <if test="optionDtos != null">#{optionDtos},</if>
+            <if test="position != null">#{position},</if>
+            <if test="score != null">#{score},</if>
+            <if test="title != null">#{title},</if>
+            <if test="plainTextTitle != null">#{plainTextTitle},</if>
+            <if test="titleAttachment != null">#{titleAttachment},</if>
+            <if test="sampleAnswerJson != null">#{sampleAnswerJson},</if>
+            <if test="stdAnswer != null">#{stdAnswer},</if>
+            <if test="analyse != null">#{analyse},</if>
+            <if test="fillblankType != null">#{fillblankType},</if>
+            <if test="judgerules != null">#{judgerules},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyXExercises" parameterType="PsyXExercises">
+        update psy_x_exercises
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="kcId != null">kc_id = #{kcId},</if>
+            <if test="kcName != null">kc_name = #{kcName},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="optionDtos != null">optionDtos = #{optionDtos},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="plainTextTitle != null">plainTextTitle = #{plainTextTitle},</if>
+            <if test="titleAttachment != null">titleAttachment = #{titleAttachment},</if>
+            <if test="sampleAnswerJson != null">sampleAnswerJson = #{sampleAnswerJson},</if>
+            <if test="stdAnswer != null">stdAnswer = #{stdAnswer},</if>
+            <if test="analyse != null">analyse = #{analyse},</if>
+            <if test="fillblankType != null">fillblankType = #{fillblankType},</if>
+            <if test="judgerules != null">judgerules = #{judgerules},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyXExercisesById" parameterType="Long">
+        delete from psy_x_exercises where id = #{id}
+    </delete>
+
+    <delete id="deletePsyXExercisesByIds" parameterType="String">
+        delete from psy_x_exercises where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

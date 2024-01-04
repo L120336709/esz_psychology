@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('新增角色')" />
+    <th:block th:include="include :: ztree-css" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form1" autocomplete="off">
+        <input id="checkId" hidden="hidden" >
+        <div class="form-group">
+            <label class="col-sm-3 control-label">老师名字：</label>
+            <div class="col-sm-8" >
+                <select class="form-control input-sm selectpicker" data-live-search="true" id="teacherId" name="teacherId"
+                        title="请选择"   th:with="dictDatas=${@dict.getTeacherMapExcept()}">
+                    <option th:each="data : ${dictDatas}" th:text="${data?.value}"
+                            th:value="${data?.key}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">班级信息</label>
+            <div class="col-sm-8">
+                <div id="menuTrees" class="ztree"></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap-select/1.13.6/css/bootstrap-select.css" />
+
+<script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap-select/1.13.6/js/bootstrap-select.js"></script>
+
+
+
+<link th:href="@{/css/dateTime.css}" rel="stylesheet"/>
+
+<script th:src="@{/js/dateTime.min.js}"></script>
+
+<script th:inline="javascript"> var ctx = [[@{/}]]; </script>
+
+<script th:src="@{/libs/validate/jquery.validate.min.js}"></script>
+<script th:src="@{/libs/validate/messages_zh.min.js}"></script>
+
+<script th:src="@{/libs/blockUI/jquery.blockUI.js}"></script>
+<script th:src="@{/libs/iCheck/icheck.min.js}"></script>
+<script th:src="@{/libs/layer/layer.min.js}"></script>
+<script th:src="@{/libs/layui/layui.js}"></script>
+<script th:src="@{/js/common.js?v=3.3.0}"></script>
+<script th:src="@{/js/global.js?v=3.3.0}"></script>
+<script th:src="@{/libs/validate/jquery.validate.extend.js}"></script>
+
+<th:block th:include="include :: ztree-js" />
+
+
+
+<script type="text/javascript">
+    var prefix = ctx + "userClassInfo";
+    $(function () {
+        var options = {
+            id: "menuTrees",
+            url: prefix + "/roleClassTreeData",
+            check: {enable: true, nocheckInherit: true, chkboxType: {"Y": "ps", "N": "ps"}},
+            expandLevel: 0
+        };
+        $.tree.init(options);
+    });
+    $("#form1").validate({
+        rules: {
+            checkId: {
+                //required: true,
+                remote: {
+                    url: prefix + "/checkUserClassInfo",
+                    type: "post",
+                    dataType: "json",
+                    sync: false,
+                    data: {
+                        teacherId: function () {
+                            return $.common.trim($("#teacherId").val());
+                        }
+                    },
+                    dataFilter: function (data, type) {
+                        if (data != "true"){
+                            layer.open("bu");
+                            alert("老师名字不存在");
+                            console.log("bu");
+                            return;
+                        } else {
+                            layer.open("存在");
+                            alert("存在");
+                            console.log("存在")
+                        }
+                        return data != "true";
+                    }
+                }
+            },
+        },
+        messages: {
+            teacherId: {
+                required : "必填",
+                remote: "角色编码已经存在"
+            }
+        }
+    });
+
+    function submitHandler() {
+        //if ($.validate.form()) {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: prefix + "/add",
+                data: {
+                    teacherId: $("#teacherId").val(),
+                    ids: $.tree.getCheckedNodes()
+                },
+                async: false,
+                error: function (request) {
+                    $.modal.alertError("系统错误");
+                },
+                success: function (data) {
+                    $.operate.successCallback(data);
+                }
+            });
+        //}
+    }
+
+</script>
+</body>
+</html>

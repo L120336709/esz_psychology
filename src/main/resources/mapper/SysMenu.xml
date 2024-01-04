@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.SysMenuDao">
+
+    <resultMap type="com.sundata.edu.domain.SysMenu" id="BaseResultMap">
+        <result property="menuId" column="menu_id"/>
+        <result property="menuName" column="menu_name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="sort" column="sort"/>
+        <result property="url" column="url"/>
+        <result property="menuType" column="menu_type"/>
+        <result property="status" column="status"/>
+        <result property="perms" column="perms"/>
+        <result property="icon" column="icon"/>
+        <result property="remark" column="remark"/>
+        <result property="created" column="created"/>
+        <result property="updated" column="updated"/>
+        <result property="isdelete" column="isdelete"/>
+    </resultMap>
+
+
+    <select id="getMenusByUserId" resultType="com.sundata.edu.domain.SysMenu">
+        SELECT DISTINCT	sm.*
+        FROM
+            sys_user_role sur
+            JOIN sys_role sr ON sur.role_id = sr.role_id AND sr.status = 1
+            JOIN sys_role_menu srm ON sur.role_id = srm.role_id
+            JOIN sys_menu sm ON sm.menu_id = srm.menu_id AND sm.status = 1
+        WHERE sm.menu_type IN ( 1, 2 ) AND sur.user_id = #{userId}
+        ORDER BY sm.menu_type, sm.sort
+    </select>
+
+    <select id="getPermsByUserId" resultType="com.sundata.edu.domain.SysMenu">
+        SELECT DISTINCT	sm.*
+        FROM
+            sys_user_role sur
+            JOIN sys_role sr ON sur.role_id = sr.role_id AND sr.status = 1
+            JOIN sys_role_menu srm ON sur.role_id = srm.role_id
+            JOIN sys_menu sm ON sm.menu_id = srm.menu_id AND sm.status = 1
+        WHERE sm.menu_type IN ( 2, 3,4 ) AND sur.user_id = #{userId}
+        ORDER BY sm.menu_type, sm.sort
+    </select>
+
+    <select id="getAvailableMenuList" resultType="com.sundata.edu.domain.SysMenu">
+        SELECT sm.*
+        FROM sys_menu sm
+        WHERE sm.status = 1
+        <if test="menuIdList != null and menuIdList.size > 0">
+            and sm.menu_id in
+            <foreach collection="menuIdList" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        ORDER BY sm.menu_type, sm.sort
+    </select>
+
+    <select id="getRoleMenuList" resultType="com.sundata.edu.domain.SysMenu">
+        SELECT sm.*
+        FROM
+            sys_role_menu srm
+            JOIN sys_menu sm ON sm.menu_id = srm.menu_id
+        WHERE sm.status = 1 AND srm.role_id= #{roleId}
+        ORDER BY sm.menu_type, sm.sort
+    </select>
+
+
+</mapper>

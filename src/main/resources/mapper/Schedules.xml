@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.SchedulesDao">
+
+    <resultMap type="com.sundata.edu.domain.Schedules" id="BaseResultMap">
+        <result property="teachid" column="teachid" />
+        <result property="phasestudy" column="phasestudy" />
+        <result property="subjectid" column="subjectid" />
+        <result property="userid" column="userid" />
+        <result property="classid" column="classid" />
+        <result property="gradeid" column="gradeid" />
+    </resultMap>
+</mapper>

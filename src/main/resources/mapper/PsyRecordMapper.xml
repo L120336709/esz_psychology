@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sundata.edu.dao.PsyRecordMapper">
+    
+    <resultMap type="PsyRecord" id="PsyRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="kcId"    column="kc_id"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="getHour"    column="get_hour"    />
+        <result property="getClasshour"    column="get_classhour"    />
+        <result property="state"    column="state"    />
+    </resultMap>
+
+    <sql id="selectPsyRecordVo">
+        select id, user_id, kc_id, start_time, end_time, get_hour, get_classhour, state from psy_record
+    </sql>
+
+    <select id="selectPsyRecordList" parameterType="PsyRecord" resultMap="PsyRecordResult">
+        <include refid="selectPsyRecordVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="kcId != null "> and kc_id = #{kcId}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="getHour != null  and getHour != ''"> and get_hour = #{getHour}</if>
+            <if test="getClasshour != null  and getClasshour != ''"> and get_classhour = #{getClasshour}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyRecordById" parameterType="Long" resultMap="PsyRecordResult">
+        <include refid="selectPsyRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyRecord" parameterType="PsyRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into psy_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="kcId != null">kc_id,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="getHour != null">get_hour,</if>
+            <if test="getClasshour != null">get_classhour,</if>
+            <if test="state != null">state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="kcId != null">#{kcId},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="getHour != null">#{getHour},</if>
+            <if test="getClasshour != null">#{getClasshour},</if>
+            <if test="state != null">#{state},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyRecord" parameterType="PsyRecord">
+        update psy_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="kcId != null">kc_id = #{kcId},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="getHour != null">get_hour = #{getHour},</if>
+            <if test="getClasshour != null">get_classhour = #{getClasshour},</if>
+            <if test="state != null">state = #{state},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyRecordById" parameterType="Long">
+        delete from psy_record where id = #{id}
+    </delete>
+
+    <delete id="deletePsyRecordByIds" parameterType="String">
+        delete from psy_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
