@@ -60,8 +60,10 @@ function saveExam() {
                 }
 
                 var value = null
+                var unnum=0;
                 for (var j = 0; j < checkboxs.length; j++) {
                     if (checkboxs[j].checked) {
+                        unnum++
                         if (value == null) {
                             value = "true"
                         } else {
@@ -75,7 +77,7 @@ function saveExam() {
                         }
                     }
                 }
-                if (value != null) {
+                if (unnum!=0) {
                     if (answer == value) {
                         anserScore = anserScore + 4
                         ques[0]++
@@ -114,7 +116,7 @@ function saveExam() {
         }
 
         var passed = "<span>本次测评未通过</span>"
-        if (anserScore >= 80) {
+        if (anserScore >= 90) {
             psyXExamination.passed = 1
             passed = "<span style='color: #00B83F'>本次测评通过</span>"
         } else {
@@ -231,7 +233,7 @@ function getXt() {
             psyXExercisesList = data.psyXExercisesList
             psyXExamination = data.psyXExamination
             if (psyXExercisesList != null && psyXExercisesList.length > 0) {
-                var html = "<div style='padding: 15px;color: #3784E4;font-size: 20px'>测评课程：" + psyXExamination.kcName +
+                var html = "<div style='padding: 15px;color: #3784E4;font-size: 18px'>测评课程：" + psyXExamination.kcName +
                     "<div id='score' class='score'  hidden>成绩:</div>"
                     + "</div>"
 
@@ -258,11 +260,13 @@ function getXt() {
                         console.log("判断题")
                     }
                     var timu = "<div class='field'  id='field" + (i + 1) + "'><div style='margin: 15px 0'>" + (i + 1) + "、" + psyXExercisesList[i].plainTextTitle
-                        + "(" + typename + psyXExercisesList[i].score + "分)</div><fieldset> "
+                        + "(" + typename  + "4分)</div><fieldset> "
+                    // + "(" + typename + psyXExercisesList[i].score + "分)</div><fieldset> "
 
                     if (type == 3) {
                         timu = "<div class='field'  id='field" + (i + 1) + "'><div style='margin: 15px 0'>" + (i + 1) + "、" + psyXExercisesList[i].plainTextTitle
-                            + " (" + typename + psyXExercisesList[i].score + "分)"
+                            + " (" + typename +  "4分)"
+                            //   + " (" + typename + psyXExercisesList[i].score + "分)"
                             + "</div><div>"
                             + "<input class='setinput'   type='text' id='" + (i + 1) + "z'>" +
                             "</div>"

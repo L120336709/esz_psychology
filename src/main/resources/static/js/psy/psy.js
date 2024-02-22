@@ -4,7 +4,9 @@ function toIndex() {
 
 
 function toPxsm() {
+
     window.location.href = "/psychology/pxsm"
+
 }
 
 function toXxjd() {
@@ -418,8 +420,6 @@ function getXxjd() {
 
                     var realName=data[0].userName
                     if(userId!=null&&userId!=""){
-
-
                         document.getElementById("title").hidden=true
                         document.getElementById("titlename").innerText=realName+"的学习档案"
                     }
@@ -588,6 +588,27 @@ function getXxjd() {
                                 document.getElementById("mins").innerHTML = mins + "分钟"
                                 document.getElementById("hours").innerHTML = classhour + "个课时"
                                 document.getElementById("classs").innerHTML = donenum + "门课程"
+
+                                if(donenum==0){
+                                     document.getElementById("studyDone").innerHTML="学习结论：<span style=\"color: red\">\n" +
+                                         "                    您尚未达到本次培训的学习要求，请继续努力！\n" +
+                                         "                </span>"
+                                }else {
+                                    if(donenum==1){
+                                        document.getElementById("studyDone").innerHTML="学习结论：<span style=\"color: #3784E4\">\n" +
+                                            "                                        您已经达到本次培训的 C 级培训合格要求，请结合培训要求继续学习！\n" +
+                                            "                                </span>"
+                                    }else  if(donenum==2){
+                                        document.getElementById("studyDone").innerHTML="学习结论：<span style=\"color: #3784E4\">\n" +
+                                            "                                        您已经达到本次培训的 B 级培训合格要求，请结合培训要求继续学习！\n" +
+                                            "                                </span>"
+                                    }else  if(donenum > 2){
+                                        document.getElementById("studyDone").innerHTML="学习结论：<span style=\"color: #3784E4\">\n" +
+                                            "                                        您已经达到本次培训的 A 级培训合格要求，请结合培训要求继续学习！\n" +
+                                            "                                </span>"
+                                    }
+                                }
+
 
                                 document.getElementById("realName").innerHTML = realName
                                 document.getElementById("userstudy").innerHTML = html
